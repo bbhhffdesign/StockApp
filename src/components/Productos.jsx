@@ -19,38 +19,51 @@ const Productos = ({ user }) => {
   const [incremento, setIncremento] = useState(1);
   const [modoEdicion, setModoEdicion] = useState(false);
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
-  const [distribuidorSeleccionado, setDistribuidorSeleccionado] = useState(null);
+  const [distribuidorSeleccionado, setDistribuidorSeleccionado] =
+    useState(null);
   const [mostrarModalProducto, setMostrarModalProducto] = useState(false);
 
   useEffect(() => {
     if (!user) return;
 
     // Cargar distribuidores con su nombre y teléfono
-    const distribuidorRef = collection(db, `stocks/${user.email}/distribuidores`);
-    const unsubscribeDistribuidores = onSnapshot(distribuidorRef, (snapshot) => {
-      const datosDistribuidores = {};
-      snapshot.docs.forEach((doc) => {
-        const data = doc.data();
-        datosDistribuidores[doc.id] = { 
-          nombre: data.nombre, 
-          telefono: data.telefono 
-        };
-      });
-      setNombresDistribuidores(datosDistribuidores);
-    });
+    const distribuidorRef = collection(
+      db,
+      `stocks/${user.email}/distribuidores`
+    );
+    const unsubscribeDistribuidores = onSnapshot(
+      distribuidorRef,
+      (snapshot) => {
+        const datosDistribuidores = {};
+        snapshot.docs.forEach((doc) => {
+          const data = doc.data();
+          datosDistribuidores[doc.id] = {
+            nombre: data.nombre,
+            telefono: data.telefono,
+          };
+        });
+        setNombresDistribuidores(datosDistribuidores);
+      }
+    );
 
     // Cargar productos por distribuidor
     const unsubscribeProductos = onSnapshot(distribuidorRef, (snapshot) => {
       snapshot.docs.forEach((distribuidorDoc) => {
         const distribuidorId = distribuidorDoc.id;
-        const productosRef = collection(db, `stocks/${user.email}/distribuidores/${distribuidorId}/productos`);
+        const productosRef = collection(
+          db,
+          `stocks/${user.email}/distribuidores/${distribuidorId}/productos`
+        );
 
         onSnapshot(productosRef, (productosSnapshot) => {
           const productos = productosSnapshot.docs.map((doc) => ({
             id: doc.id,
             ...doc.data(),
           }));
-          const productosOrdenados = productos.sort((a, b) => (b.cantActual < b.cantDeseada) - (a.cantActual < a.cantDeseada));
+          const productosOrdenados = productos.sort(
+            (a, b) =>
+              (b.cantActual < b.cantDeseada) - (a.cantActual < a.cantDeseada)
+          );
 
           setProductosPorDistribuidor((prevState) => ({
             ...prevState,
@@ -65,6 +78,30 @@ const Productos = ({ user }) => {
       unsubscribeProductos();
     };
   }, [user]);
+
+  const handleEliminarProducto = async (distribuidorId, productoId) => {
+    if (!window.confirm("¿Seguro que quieres eliminar este producto?")) return;
+
+    try {
+      await deleteDoc(
+        doc(
+          db,
+          `stocks/${user.email}/distribuidores/${distribuidorId}/productos/${productoId}`
+        )
+      );
+
+      // Actualizar el estado para eliminar el producto de la UI
+      setProductosPorDistribuidor((prevState) => {
+        const nuevosProductos = { ...prevState };
+        nuevosProductos[distribuidorId] = nuevosProductos[
+          distribuidorId
+        ].filter((p) => p.id !== productoId);
+        return nuevosProductos;
+      });
+    } catch (error) {
+      console.error("Error al eliminar producto", error);
+    }
+  };
 
   const enviarMensajeWhatsApp = (distribuidorId) => {
     const distribuidor = nombresDistribuidores[distribuidorId];
@@ -81,8 +118,8 @@ const Productos = ({ user }) => {
     }
 
     const productosFaltantes = productosPorDistribuidor[distribuidorId]
-      .filter(p => p.cantActual < p.cantDeseada)
-      .map(p => `- ${p.nombre}: ${p.cantActual}/${p.cantDeseada}`)
+      .filter((p) => p.cantActual < p.cantDeseada)
+      .map((p) => `- ${p.nombre}: ${p.cantActual}/${p.cantDeseada}`)
       .join("\n");
 
     if (!productosFaltantes) {
@@ -98,10 +135,18 @@ const Productos = ({ user }) => {
 
   return (
     <div>
-      <button className="btn btn-warning mb-3" onClick={() => setModoEdicion(!modoEdicion)}>
+      <button
+        className="btn btn-warning mb-3"
+        onClick={() => setModoEdicion(!modoEdicion)}
+      >
         {modoEdicion ? "Salir del modo edición" : "Modo edición"}
       </button>
-      <button className="btn btn-info mb-3" onClick={() => logProductosFaltantes(productosPorDistribuidor, nombresDistribuidores)}>
+      <button
+        className="btn btn-info mb-3"
+        onClick={() =>
+          logProductosFaltantes(productosPorDistribuidor, nombresDistribuidores)
+        }
+      >
         Copiar productos faltantes 📋
       </button>
 
@@ -112,8 +157,9 @@ const Productos = ({ user }) => {
               <thead>
                 <tr className="table-primary">
                   <th colSpan={modoEdicion ? 4 : 3} className="text-center">
-                    {nombresDistribuidores[distribuidorId]?.nombre || "Cargando..."}
-                    <button 
+                    {nombresDistribuidores[distribuidorId]?.nombre ||
+                      "Cargando..."}
+                    <button
                       className="btn btn-success btn-sm ms-2"
                       onClick={() => enviarMensajeWhatsApp(distribuidorId)}
                     >
@@ -134,14 +180,18 @@ const Productos = ({ user }) => {
                   return (
                     <React.Fragment key={producto.id}>
                       <tr
-                        style={{ backgroundColor: faltante ? "#ffcccc" : "#ccffcc" }}
+                        style={{
+                          backgroundColor: faltante ? "#ffcccc" : "#ccffcc",
+                        }}
                         onClick={() => {
                           if (modoEdicion) {
                             setProductoSeleccionado(producto);
                             setDistribuidorSeleccionado(distribuidorId);
                             setMostrarModalProducto(true);
                           } else {
-                            setFilaExpandida(filaExpandida === producto.id ? null : producto.id);
+                            setFilaExpandida(
+                              filaExpandida === producto.id ? null : producto.id
+                            );
                           }
                         }}
                       >
@@ -154,7 +204,10 @@ const Productos = ({ user }) => {
                               className="btn btn-danger btn-sm"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                handleEliminarProducto(distribuidorId, producto.id);
+                                handleEliminarProducto(
+                                  distribuidorId,
+                                  producto.id
+                                );
                               }}
                             >
                               ×
@@ -173,7 +226,10 @@ const Productos = ({ user }) => {
         <p>No hay productos disponibles.</p>
       )}
 
-      <Modal isOpen={mostrarModalProducto} onClose={() => setMostrarModalProducto(false)}>
+      <Modal
+        isOpen={mostrarModalProducto}
+        onClose={() => setMostrarModalProducto(false)}
+      >
         <ProductForm
           user={user}
           distribuidor={distribuidorSeleccionado}
