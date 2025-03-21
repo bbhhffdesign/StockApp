@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { db } from "../js/firebaseConfig";
-import { doc, deleteDoc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 
 const DistribuidorForm = ({ user, distribuidor, onDistribuidorAgregado }) => {
   const [nombre, setNombre] = useState(distribuidor?.nombre || "");
@@ -20,12 +20,11 @@ const DistribuidorForm = ({ user, distribuidor, onDistribuidorAgregado }) => {
     if (!nombre) return alert("El nombre es obligatorio");
 
     try {
-      if (distribuidor && distribuidor.id !== nombre) {
-        await deleteDoc(doc(db, `stocks/${user.email}/distribuidores/${distribuidor.id}`));
-      }
+      const distribuidorId = distribuidor?.id || crypto.randomUUID(); // 🔹 Usa un ID fijo
+      const distribuidorRef = doc(db, `stocks/${user.email}/distribuidores/${distribuidorId}`);
 
-      const distribuidorRef = doc(db, `stocks/${user.email}/distribuidores/${nombre}`);
-      await setDoc(distribuidorRef, { id: nombre, nombre, telefono, diaSemana });
+      await setDoc(distribuidorRef, { id: distribuidorId, nombre, telefono, diaSemana }, { merge: true });
+
       onDistribuidorAgregado();
     } catch (error) {
       console.error("Error al guardar distribuidor", error);

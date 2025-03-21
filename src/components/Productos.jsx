@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../js/firebaseConfig";
-import { collection, doc, updateDoc, getDoc, deleteDoc, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  updateDoc,
+  getDoc,
+  deleteDoc,
+  onSnapshot,
+} from "firebase/firestore";
 import Modal from "./Modal";
 import ProductForm from "./ProductForm";
+import logProductosFaltantes from "../js/productosFaltantes";
 
 const Productos = ({ user }) => {
   const [productosPorDistribuidor, setProductosPorDistribuidor] = useState({});
@@ -10,33 +18,49 @@ const Productos = ({ user }) => {
   const [incremento, setIncremento] = useState(1);
   const [modoEdicion, setModoEdicion] = useState(false);
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
-  const [distribuidorSeleccionado, setDistribuidorSeleccionado] = useState(null);
+  const [distribuidorSeleccionado, setDistribuidorSeleccionado] =
+    useState(null);
   const [mostrarModalProducto, setMostrarModalProducto] = useState(false);
 
   useEffect(() => {
     if (!user) return;
 
-    const distribuidorRef = collection(db, `stocks/${user.email}/distribuidores`);
-    const unsubscribeDistribuidores = onSnapshot(distribuidorRef, (snapshot) => {
-      snapshot.docs.forEach((distribuidorDoc) => {
-        const distribuidorId = distribuidorDoc.id;
-        const productosRef = collection(db, `stocks/${user.email}/distribuidores/${distribuidorId}/productos`);
+    const distribuidorRef = collection(
+      db,
+      `stocks/${user.email}/distribuidores`
+    );
+    const unsubscribeDistribuidores = onSnapshot(
+      distribuidorRef,
+      (snapshot) => {
+        snapshot.docs.forEach((distribuidorDoc) => {
+          const distribuidorId = distribuidorDoc.id;
+          const productosRef = collection(
+            db,
+            `stocks/${user.email}/distribuidores/${distribuidorId}/productos`
+          );
 
-        const unsubscribeProductos = onSnapshot(productosRef, (productosSnapshot) => {
-          const productos = productosSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-          const productosOrdenados = productos.sort((a, b) => {
-            const faltanteA = a.cantActual < a.cantDeseada;
-            const faltanteB = b.cantActual < b.cantDeseada;
-            return faltanteB - faltanteA;
-          });
+          const unsubscribeProductos = onSnapshot(
+            productosRef,
+            (productosSnapshot) => {
+              const productos = productosSnapshot.docs.map((doc) => ({
+                id: doc.id,
+                ...doc.data(),
+              }));
+              const productosOrdenados = productos.sort((a, b) => {
+                const faltanteA = a.cantActual < a.cantDeseada;
+                const faltanteB = b.cantActual < b.cantDeseada;
+                return faltanteB - faltanteA;
+              });
 
-          setProductosPorDistribuidor((prevState) => ({
-            ...prevState,
-            [distribuidorId]: productosOrdenados,
-          }));
+              setProductosPorDistribuidor((prevState) => ({
+                ...prevState,
+                [distribuidorId]: productosOrdenados,
+              }));
+            }
+          );
         });
-      });
-    });
+      }
+    );
 
     return () => unsubscribeDistribuidores();
   }, [user]);
@@ -46,14 +70,17 @@ const Productos = ({ user }) => {
   };
 
   const actualizarCantidad = async (distribuidorId, productoId, cambio) => {
-    const productoRef = doc(db, `stocks/${user.email}/distribuidores/${distribuidorId}/productos/${productoId}`);
+    const productoRef = doc(
+      db,
+      `stocks/${user.email}/distribuidores/${distribuidorId}/productos/${productoId}`
+    );
     const productoSnap = await getDoc(productoRef);
-    
+
     if (!productoSnap.exists()) {
       console.error("El producto no existe en la base de datos", productoId);
       return;
     }
-    
+
     const productoData = productoSnap.data();
     const nuevoValor = (productoData.cantActual || 0) + cambio;
     await updateDoc(productoRef, { cantActual: nuevoValor });
@@ -62,10 +89,17 @@ const Productos = ({ user }) => {
   const handleEliminarProducto = async (distribuidorId, productoId) => {
     if (!window.confirm("¿Seguro que quieres eliminar este producto?")) return;
     try {
-      await deleteDoc(doc(db, `stocks/${user.email}/distribuidores/${distribuidorId}/productos/${productoId}`));
+      await deleteDoc(
+        doc(
+          db,
+          `stocks/${user.email}/distribuidores/${distribuidorId}/productos/${productoId}`
+        )
+      );
       setProductosPorDistribuidor((prevState) => {
         const nuevosProductos = { ...prevState };
-        nuevosProductos[distribuidorId] = nuevosProductos[distribuidorId].filter(p => p.id !== productoId);
+        nuevosProductos[distribuidorId] = nuevosProductos[
+          distribuidorId
+        ].filter((p) => p.id !== productoId);
         return nuevosProductos;
       });
     } catch (error) {
@@ -79,19 +113,49 @@ const Productos = ({ user }) => {
     setDistribuidorSeleccionado(distribuidorId);
     setMostrarModalProducto(true);
   };
+  const [nombresDistribuidores, setNombresDistribuidores] = useState({});
+
+  useEffect(() => {
+    if (!user) return;
+
+    const distribuidorRef = collection(
+      db,
+      `stocks/${user.email}/distribuidores`
+    );
+    const unsubscribeDistribuidores = onSnapshot(
+      distribuidorRef,
+      (snapshot) => {
+        const nombres = {};
+        snapshot.docs.forEach((distribuidorDoc) => {
+          nombres[distribuidorDoc.id] = distribuidorDoc.data().nombre; // 🔹 Guarda el nombre con el ID como clave
+        });
+        setNombresDistribuidores(nombres);
+      }
+    );
+
+    return () => unsubscribeDistribuidores();
+  }, [user]);
 
   return (
     <div>
-      <button className="btn btn-warning mb-3" onClick={() => setModoEdicion(!modoEdicion)}>
+      <button
+        className="btn btn-warning mb-3"
+        onClick={() => setModoEdicion(!modoEdicion)}
+      >
         {modoEdicion ? "Salir del modo edición" : "Modo edición"}
       </button>
+      <button className="btn btn-info mb-3" onClick={() => logProductosFaltantes(productosPorDistribuidor, nombresDistribuidores)}>
+  Copiar productos faltantes 📋
+</button>
       {Object.keys(productosPorDistribuidor).length > 0 ? (
         Object.keys(productosPorDistribuidor).map((distribuidorId) => (
           <div key={distribuidorId} className="mb-4">
             <table className="table table-bordered">
               <thead>
                 <tr className="table-primary">
-                  <th colSpan={modoEdicion ? 4 : 3} className="text-center">{distribuidorId}</th>
+                  <th colSpan={modoEdicion ? 4 : 3} className="text-center">
+                    {nombresDistribuidores[distribuidorId] || "Cargando..."}
+                  </th>
                 </tr>
                 <tr className="table-light">
                   <th>Nombre</th>
@@ -106,7 +170,9 @@ const Productos = ({ user }) => {
                   return (
                     <React.Fragment key={producto.id}>
                       <tr
-                        style={{ backgroundColor: faltante ? "#ffcccc" : "#ccffcc" }}
+                        style={{
+                          backgroundColor: faltante ? "#ffcccc" : "#ccffcc",
+                        }}
                         onClick={() => {
                           if (modoEdicion) {
                             // Si estamos en modo edición, abrimos el modal
@@ -126,7 +192,10 @@ const Productos = ({ user }) => {
                               className="btn btn-danger btn-sm"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                handleEliminarProducto(distribuidorId, producto.id);
+                                handleEliminarProducto(
+                                  distribuidorId,
+                                  producto.id
+                                );
                               }}
                             >
                               ×
@@ -136,23 +205,44 @@ const Productos = ({ user }) => {
                       </tr>
                       {filaExpandida === producto.id && !modoEdicion && (
                         <tr>
-                          <td colSpan={modoEdicion ? 4 : 3} className="text-center">
+                          <td
+                            colSpan={modoEdicion ? 4 : 3}
+                            className="text-center"
+                          >
                             <div className="btn-group">
                               <button
                                 className="btn btn-success"
-                                onClick={() => actualizarCantidad(distribuidorId, producto.id, incremento)}
+                                onClick={() =>
+                                  actualizarCantidad(
+                                    distribuidorId,
+                                    producto.id,
+                                    incremento
+                                  )
+                                }
                               >
                                 +
                               </button>
                               <button
                                 className="btn btn-danger"
-                                onClick={() => actualizarCantidad(distribuidorId, producto.id, -incremento)}
+                                onClick={() =>
+                                  actualizarCantidad(
+                                    distribuidorId,
+                                    producto.id,
+                                    -incremento
+                                  )
+                                }
                               >
                                 -
                               </button>
                               <button
-                                className={`btn ${incremento === 1 ? "btn-secondary" : "btn-warning"}`}
-                                onClick={() => setIncremento(incremento === 1 ? 10 : 1)}
+                                className={`btn ${
+                                  incremento === 1
+                                    ? "btn-secondary"
+                                    : "btn-warning"
+                                }`}
+                                onClick={() =>
+                                  setIncremento(incremento === 1 ? 10 : 1)
+                                }
                               >
                                 *10
                               </button>
@@ -171,7 +261,10 @@ const Productos = ({ user }) => {
         <p>No hay productos disponibles.</p>
       )}
       {/* El modal se muestra cuando mostrarModalProducto es true */}
-      <Modal isOpen={mostrarModalProducto} onClose={() => setMostrarModalProducto(false)}>
+      <Modal
+        isOpen={mostrarModalProducto}
+        onClose={() => setMostrarModalProducto(false)}
+      >
         <ProductForm
           user={user}
           distribuidor={distribuidorSeleccionado}

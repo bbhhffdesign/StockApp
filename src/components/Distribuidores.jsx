@@ -70,7 +70,7 @@ const Distribuidores = ({ user }) => {
                 </button>
               ) : (
                 <button className="btn btn-primary btn-sm" onClick={() => {
-                  setDistribuidorSeleccionado(distribuidor.nombre);
+                  setDistribuidorSeleccionado(distribuidor.id); // 🔹 Usa el ID en lugar del nombre
                   setMostrarModalProducto(true);
                 }}>
                   +
