@@ -16,17 +16,16 @@ const Productos = ({ user }) => {
   const [productosPorDistribuidor, setProductosPorDistribuidor] = useState({});
   const [nombresDistribuidores, setNombresDistribuidores] = useState({});
   const [filaExpandida, setFilaExpandida] = useState(null);
-  const [incremento, setIncremento] = useState(1);
   const [modoEdicion, setModoEdicion] = useState(false);
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
   const [distribuidorSeleccionado, setDistribuidorSeleccionado] =
     useState(null);
   const [mostrarModalProducto, setMostrarModalProducto] = useState(false);
+  const [multiplicarPorDiez, setMultiplicarPorDiez] = useState(false);
 
   useEffect(() => {
     if (!user) return;
 
-    // Cargar distribuidores con su nombre y teléfono
     const distribuidorRef = collection(
       db,
       `stocks/${user.email}/distribuidores`
@@ -79,6 +78,24 @@ const Productos = ({ user }) => {
     };
   }, [user]);
 
+  const actualizarCantidadProducto = async (
+    distribuidorId,
+    productoId,
+    cantidad
+  ) => {
+    const productoRef = doc(
+      db,
+      `stocks/${user.email}/distribuidores/${distribuidorId}/productos/${productoId}`
+    );
+    try {
+      await updateDoc(productoRef, {
+        cantActual: cantidad,
+      });
+    } catch (error) {
+      console.error("Error al actualizar cantidad", error);
+    }
+  };
+
   const handleEliminarProducto = async (distribuidorId, productoId) => {
     if (!window.confirm("¿Seguro que quieres eliminar este producto?")) return;
 
@@ -103,23 +120,19 @@ const Productos = ({ user }) => {
     }
   };
 
-  const enviarMensajeWhatsApp = (distribuidorId) => {
-    const distribuidor = nombresDistribuidores[distribuidorId];
-
-    if (!distribuidor) {
-      alert("No se encontró información del distribuidor.");
-      return;
-    }
-
-    const telefono = distribuidor.telefono;
-    if (!telefono) {
-      alert("No se encontró el número de teléfono del distribuidor.");
-      return;
-    }
-
+  const enviarMensajeWhatsApp = (
+    distribuidorId,
+    productosPorDistribuidor,
+    nombresDistribuidores
+  ) => {
+    const distribuidorNombre =
+      nombresDistribuidores[distribuidorId] || "Distribuidor";
     const productosFaltantes = productosPorDistribuidor[distribuidorId]
-      .filter((p) => p.cantActual < p.cantDeseada)
-      .map((p) => `- ${p.nombre}: ${p.cantActual}/${p.cantDeseada}`)
+      .filter((producto) => producto.cantActual < producto.cantDeseada)
+      .map(
+        (producto) =>
+          `- ${producto.nombre} ${producto.cantDeseada - producto.cantActual}`
+      )
       .join("\n");
 
     if (!productosFaltantes) {
@@ -127,9 +140,9 @@ const Productos = ({ user }) => {
       return;
     }
 
-    const mensaje = `Hola ${distribuidor.nombre}, estos son los productos que necesitamos reponer:\n\n${productosFaltantes}\n\n¡Gracias!`;
-    const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
+    const mensaje = `${productosFaltantes}`;
 
+    const url = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
     window.open(url, "_blank");
   };
 
@@ -161,7 +174,13 @@ const Productos = ({ user }) => {
                       "Cargando..."}
                     <button
                       className="btn btn-success btn-sm ms-2"
-                      onClick={() => enviarMensajeWhatsApp(distribuidorId)}
+                      onClick={() =>
+                        enviarMensajeWhatsApp(
+                          distribuidorId,
+                          productosPorDistribuidor,
+                          nombresDistribuidores
+                        )
+                      }
                     >
                       WPP
                     </button>
@@ -215,6 +234,50 @@ const Productos = ({ user }) => {
                           </td>
                         )}
                       </tr>
+                      {filaExpandida === producto.id && !modoEdicion && (
+                        <tr>
+                          <td colSpan="3" className="text-center">
+                            <button
+                              className="btn btn-outline-secondary me-2"
+                              onClick={() =>
+                                actualizarCantidadProducto(
+                                  distribuidorId,
+                                  producto.id,
+                                  producto.cantActual -
+                                    (multiplicarPorDiez ? 10 : 1)
+                                )
+                              }
+                            >
+                              -{multiplicarPorDiez ? "10" : "1"}
+                            </button>
+                            <button
+                              className="btn btn-outline-secondary me-2"
+                              onClick={() =>
+                                actualizarCantidadProducto(
+                                  distribuidorId,
+                                  producto.id,
+                                  producto.cantActual +
+                                    (multiplicarPorDiez ? 10 : 1)
+                                )
+                              }
+                            >
+                              +{multiplicarPorDiez ? "10" : "1"}
+                            </button>
+                            <button
+                              className={`btn ${
+                                multiplicarPorDiez
+                                  ? "btn-warning"
+                                  : "btn-outline-warning"
+                              }`}
+                              onClick={() =>
+                                setMultiplicarPorDiez(!multiplicarPorDiez)
+                              }
+                            >
+                              ×10
+                            </button>
+                          </td>
+                        </tr>
+                      )}
                     </React.Fragment>
                   );
                 })}

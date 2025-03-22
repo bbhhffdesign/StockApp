@@ -7,7 +7,7 @@ const logProductosFaltantes = (productosPorDistribuidor = {}, nombresDistribuido
       .map((producto) => `- ${producto.nombre} ${producto.cantDeseada - producto.cantActual}`);
 
     if (productosFaltantes.length > 0) {
-      mensaje += `${nombresDistribuidores[distribuidorId] || distribuidorId}:\n`;
+      mensaje += `${nombresDistribuidores[distribuidorId]?.nombre || distribuidorId}:\n`;
       mensaje += productosFaltantes.join("\n") + "\n-------------------\n";
     }
   });
