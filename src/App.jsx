@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/css/bootstrap.css";
+import "./css/layout.css"
 import Login from "./components/Login";
 import Distribuidores from "./components/Distribuidores";
 import Productos from "./components/Productos";
@@ -16,7 +17,9 @@ function App() {
   };
 
   return (
-    <div className="container mt-4">
+    <div className="main-container container-fluid">
+      {/* <span className="bg-spot spot-top"></span>
+      <span className="bg-spot spot-bottom"></span> */}
       {user ? (
         <>
           {/* <h2>Bienvenido, {user.displayName}</h2> */}

@@ -1,0 +1,30 @@
+/* @import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700&display=swap"); */
+
+
+:root{
+    --clr-black: rgb(0, 0, 0);
+    --clr-gray-dark: #292929;
+    --black: #191919;
+    --purple: #6f42c1;
+    --gray-100: #bebebe;
+    --gray-200: #8a8a8a;
+    --gray-300: #616161;
+    --gray-400: #555555;
+    --gray-500: #4a4a4a;
+    --gray-600: #3b3b3b;
+    --gray-700: #2d2d2d;
+    --gray-800: #262626;
+    /* --font-family-sans-serif: "Roboto", sans-serif !important */
+    /* --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; */
+
+}
+
+/* 
+.roboto{
+    font-family: "Roboto", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: <weight>;
+    font-style: normal;
+    font-variation-settings:
+      "wdth" 100;
+  } */
