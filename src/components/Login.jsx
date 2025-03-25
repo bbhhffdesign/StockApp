@@ -45,7 +45,7 @@ const Login = ({ setUser }) => {
             </span>
 
           <input
-            className="form-control input-personalizado"
+            className="form-control"
             type="email"
             placeholder="Correo electrónico"
             value={email}
