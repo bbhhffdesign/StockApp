@@ -106,6 +106,7 @@ h3 {
   width: 100%;
   background: linear-gradient(145deg, #191919, #1e1e1e);
   box-shadow: 5px 5px 14px #131313, -5px -5px 14px #252525;
+  transition: all .5s linear;
   
 }
 .login-container form button {
@@ -116,6 +117,7 @@ h3 {
 .login-container form button:focus {
   /* background: linear-gradient(145deg, #1616166c, #10101048); */
   /* box-shadow: inset 9.01px 9.01px 20px #191919, inset -9.01px -9.01px 20px #202020; */
+  transition: all .2s linear;
   background: transparent;
   box-shadow: none;
   /* border: solid 1px var(--gray-800); */
