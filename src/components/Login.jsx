@@ -72,7 +72,7 @@ const Login = ({ setUser }) => {
           {isRegistering ? "Registrarse" : "Iniciar Sesión"}
         </button>
         <button
-          className="fw-bold"
+          className="fw-bold text-primary"
           onClick={() => setIsRegistering(!isRegistering)}
         >
           {isRegistering ? "¿Ya tienes cuenta? Inicia sesión" : "Registrase"}
