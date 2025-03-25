@@ -18,28 +18,28 @@ function App() {
 
   return (
     <div className="main-container container-fluid">
-      {/* <span className="bg-spot spot-top"></span>
-      <span className="bg-spot spot-bottom"></span> */}
       {user ? (
         <>
-          {/* <h2>Bienvenido, {user.displayName}</h2> */}
-          <button className="btn btn-danger mb-3" onClick={handleLogout}>
-            Cerrar sesión
-          </button>
           
-          <div className="btn-group mb-3">
+          <div className="btn-group btn-group-nav w-100 mb-3">
+         
             <button
-              className={`btn ${seccion === "distribuidores" ? "btn-primary" : "btn-secondary"}`}
+            className="btn"
+              // className={`btn ${seccion === "distribuidores" ? "btn-primary" : "btn-secondary"}`}
               onClick={() => setSeccion("distribuidores")}
             >
               Distribuidores
             </button>
             <button
-              className={`btn ${seccion === "productos" ? "btn-primary" : "btn-secondary"}`}
+            className="btn"
+              // className={`btn ${seccion === "productos" ? "btn-primary" : "btn-secondary"}`}
               onClick={() => setSeccion("productos")}
             >
               Productos
             </button>
+            <button className="btn btn-danger btn-danger-nav" onClick={handleLogout}>
+           X
+          </button>
           </div>
           
           {seccion === "distribuidores" ? <Distribuidores user={user} /> : <Productos user={user} />}

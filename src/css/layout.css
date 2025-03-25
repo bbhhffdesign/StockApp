@@ -122,3 +122,30 @@ h3 {
   /* border: solid 1px var(--gray-800); */
   
 }
+
+.btn-group-nav{
+  border-radius: 0;
+  background-color: var(--gray-700);
+}
+
+.btn-group-nav button{
+  border-radius: 0; 
+  background-color: transparent;
+  border: none;
+  /* border: solid .5px var(--gray-600); */
+  /* box-shadow: inset 9px 9px 18px #1a1a1a,
+            inset -9px -9px 18px #323232; */
+}
+.btn-group-nav button:hover,
+.btn-group-nav button:active,
+.btn-group-nav button:focus{
+  border: solid .5px var(--gray-600);
+  /* border-left: solid .5px var(--gray-600); */
+  background-color: transparent;
+  box-shadow: inset 9px 9px 18px #111111,
+            inset -9px -9px 18px #3b3b3b;
+}
+
+.btn-danger-nav{
+  background-color: rgba(190, 75, 75, 0.739) !important;
+}
