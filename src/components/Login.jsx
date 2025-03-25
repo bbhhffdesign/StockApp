@@ -35,10 +35,10 @@ const Login = ({ setUser }) => {
   return (
     <div className="login-container ">
       <form onSubmit={handleSubmit}>
-        <h2>{isRegistering ? "Registrarse" : "Ingresar"}</h2>
+        <h2 className="mb-4">Control de Stock</h2>
 
 
-        <div className="input-group  mb-4">
+        <div className="input-group  mb-2">
           
             <span class="input-group-text">
               <span class="fas fa-user"></span>

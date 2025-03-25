@@ -19,6 +19,7 @@ h3 {
   color: var(--gray-100) !important;
 }
 .main-container {
+  height: 100svh;
   position: relative;
   padding: 0;
   margin: 0;
@@ -112,9 +113,7 @@ h3 {
 .login-container form button {
   border: none;
 }
-.login-container form button:hover,
-.login-container form button:active,
-.login-container form button:focus {
+.login-container form button:active {
   /* background: linear-gradient(145deg, #1616166c, #10101048); */
   /* box-shadow: inset 9.01px 9.01px 20px #191919, inset -9.01px -9.01px 20px #202020; */
   transition: all .2s linear;
