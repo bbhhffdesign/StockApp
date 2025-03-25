@@ -38,7 +38,7 @@ const Login = ({ setUser }) => {
         <h2 className="mb-4">Control de Stock</h2>
 
 
-        <div className="input-group  mb-2">
+        <div className="input-group mb-2">
           
             <span class="input-group-text">
               <span class="fas fa-user"></span>
