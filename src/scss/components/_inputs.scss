@@ -1,0 +1,65 @@
+@use "../abstract/variables" as *;
+@use "../abstract/mixins" as *;
+
+.input-group {
+    border-radius: .5rem;
+    /* border: solid 1px var(--gray-800); */
+    border: none;
+    /* box-shadow: inset 3px 3px 6px #202020,
+    inset -3px -3px 6px #2c2c2c; */
+    /* box-shadow: inset 3px 3px 12px #0d0d0d,
+              inset -3px -3px 12px #2b2b2b; */
+  }
+  .input-group span {
+    position: relative;
+    border: none;
+    overflow: hidden;
+    // background-color: rgba(0, 0, 0, 0.093);
+
+    span{
+      z-index: 1;
+
+      &::after{
+        all: unset;
+      }
+    }
+    
+    &::after{
+      z-index: 0;
+      content: "";
+      position: absolute;
+      inset: 0;
+      @include neu-gradient($gray-1000, 0, 0, 180deg, );
+    }
+
+  }
+  .login-container input {
+    background-color: transparent;
+    border: none;
+    font-size: 1rem;
+    // box-shadow: inset 11px 11px 52px #1f1f1f,
+    // inset -11px -11px 52px #252525;
+    @include neu-bottom($black, .6, 1, true);
+  }
+  .input-group input:active::placeholder,
+  .input-group input:focus::placeholder,
+  .input-group input:active::placeholder{
+    color: $gray-200;
+  }
+  .input-group input:hover,
+  .input-group input:focus,
+  .input-group input:active,
+  .input-group input:hover:-webkit-autofill,
+  .input-group input:focus:-webkit-autofill,
+  .input-group input:active:-webkit-autofill {
+    color: $gray-100;
+    @include neu-bottom($gray-600, .6, 1, true);
+    //     box-shadow: inset 11px 11px 52px #1f1f1f,
+    // inset -11px -11px 52px #5351ac28;
+  }
+  .input-group input:-webkit-autofill,
+  .input-group input:hover:-webkit-autofill,
+  .input-group input:focus:-webkit-autofill{
+    -webkit-background-clip: text;
+    // @include neu-bottom($gray-500, .5, .5, true);
+  }

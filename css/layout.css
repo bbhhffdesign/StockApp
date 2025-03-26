@@ -18,6 +18,8 @@ h3 {
   text-align: center;
   color: var(--gray-100) !important;
 }
+
+
 .main-container {
   height: 100svh;
   position: relative;

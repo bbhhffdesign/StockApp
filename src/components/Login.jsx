@@ -35,13 +35,13 @@ const Login = ({ setUser }) => {
   return (
     <div className="login-container ">
       <form onSubmit={handleSubmit}>
-        <h2 className="mb-4">Control de Stock</h2>
+        <h2 className="h2-title mb-4">Control de Stock</h2>
 
 
         <div className="input-group mb-2">
           
-            <span class="input-group-text">
-              <span class="fas fa-user"></span>
+            <span className="input-group-text">
+              <span className="fas fa-user"></span>
             </span>
 
           <input
@@ -53,10 +53,10 @@ const Login = ({ setUser }) => {
             required
           />
         </div>
-        <div class="input-group mb-4">
+        <div className="input-group mb-4">
 
-            <span class="input-group-text">
-              <span class="fas fa-key"></span>
+            <span className="input-group-text">
+              <span className="fas fa-key"></span>
             </span>
 
           <input
@@ -72,7 +72,7 @@ const Login = ({ setUser }) => {
           {isRegistering ? "Registrarse" : "Iniciar Sesión"}
         </button>
         <button
-          className="fw-bold text-primary"
+          className="btn btn-register fw-bold"
           onClick={() => setIsRegistering(!isRegistering)}
         >
           {isRegistering ? "¿Ya tienes cuenta? Inicia sesión" : "Registrase"}

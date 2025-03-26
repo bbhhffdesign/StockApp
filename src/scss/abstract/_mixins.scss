@@ -1,0 +1,129 @@
+@use "./variables" as *;
+
+
+@mixin grad-bg($clr-1, $clr-2,$deg: 0deg){
+  background: linear-gradient($deg, $clr-1, $clr-2);
+}
+
+@mixin neu-top($background, $scale: 1, $opacity: 1, $invert: false) {
+  // Definimos colores base
+  $highlight: lighten($background, 1.5%);
+  $lowlight: darken($background, 2%);
+  $shadowhigh: rgba(lighten($background, 5%), $opacity);
+  $shadowlow: rgba(darken($background, 5%), $opacity);
+
+  // Ángulo del degradado según el estado de inversión
+  $angle: if($invert, 325deg, 145deg);
+
+  // Aplicamos el fondo con gradiente SIN afectar la opacidad
+  background: linear-gradient($angle, $lowlight, $highlight), $background;
+
+  // Aplicamos el box-shadow con opacidad en las sombras
+  box-shadow: #{5px * $scale} #{5px * $scale} #{14px * $scale} $shadowlow,
+              #{-5px * $scale} #{-5px * $scale} #{14px * $scale} $shadowhigh;
+}
+
+@mixin neu-gradient($background, $intensity: 1, $opacity: 1, $deg: 0deg, $shadow-size: 1) {
+  // Generamos los colores del degradado
+  $highlight: lighten($background, 10%);  // Color más claro para el gradiente
+  $lowlight: darken($background, 10%);    // Color más oscuro para el gradiente
+
+  // Generamos los colores de las sombras con transparencia
+  $shadow-dark: rgba(red(darken($background, 15%)), green(darken($background, 15%)), blue(darken($background, 15%)), $opacity);
+  $shadow-light: rgba(red(lighten($background, 15%)), green(lighten($background, 15%)), blue(lighten($background, 15%)), $opacity);
+
+  // Aplicamos el fondo con gradiente
+  background: linear-gradient($deg, $highlight, $lowlight);
+
+  // Aplicamos el box-shadow con tamaño escalado
+  box-shadow: 
+    #{20px * $intensity * $shadow-size} #{20px * $intensity * $shadow-size} #{60px * $intensity * $shadow-size} $shadow-dark,
+    #{-20px * $intensity * $shadow-size} #{-20px * $intensity * $shadow-size} #{60px * $intensity * $shadow-size} $shadow-light;
+}
+@mixin neu-bottom($background, $shadow-intensity: 1, $opacity: 1, $invert: false) {
+  // Ajustamos los valores para la sombra
+  $shadow-high: lighten($background, $shadow-intensity * 10%);
+  $shadow-low: darken($background, $shadow-intensity * 10%);
+
+  // Si $invert es true, intercambiamos las sombras
+  @if $invert {
+      $temp: $shadow-high;
+      $shadow-high: $shadow-low;
+      $shadow-low: $temp;
+  }
+
+  // Convertimos sombras a rgba() con la opacidad deseada
+  $shadow-high-rgba: rgba(red($shadow-high), green($shadow-high), blue($shadow-high), $opacity);
+  $shadow-low-rgba: rgba(red($shadow-low), green($shadow-low), blue($shadow-low), $opacity);
+
+  // Convertimos el color de fondo a rgba() con la opacidad deseada
+  $background-rgba: rgba(red($background), green($background), blue($background), $opacity);
+
+  // Aplicamos el box-shadow con la inversión si es necesario
+  box-shadow: inset -5px -5px 15px $shadow-low-rgba, inset 5px 5px 15px $shadow-high-rgba;
+  background: $background-rgba;
+}
+
+@mixin neu-top-soft($background, $intensity: 1, $opacity: 1, $invert: false) {
+  // Ajustamos los valores de la sombra en base a #000 y #262626
+  $shadow-dark: mix(#000, $background, 70%); // Similar a #000
+  $shadow-light: mix(#262626, $background, 70%); // Similar a #262626
+
+  // Si $invert es true, intercambiamos las sombras
+  @if $invert {
+      $temp: $shadow-dark;
+      $shadow-dark: $shadow-light;
+      $shadow-light: $temp;
+  }
+
+  // Convertimos el color de fondo a rgba() con la opacidad deseada
+  $background-rgba: rgba(red($background), green($background), blue($background), $opacity);
+
+  // Aplicamos el box-shadow con la relación correcta de valores
+  box-shadow: #{9.91px * $intensity} #{9.91px * $intensity} #{15px * $intensity} $shadow-dark,
+              #{-9.91px * $intensity} #{-9.91px * $intensity} #{15px * $intensity} $shadow-light;
+  background: $background-rgba;
+}
+@mixin neu-top-soft2($background, $intensity: 1, $opacity: 1, $invert: false) {
+  // Ajustamos los valores de la sombra en base a #000 y #262626
+  $shadow-dark: mix(#000, $background, 70%);
+  $shadow-light: mix(#262626, $background, 70%);
+
+  // Si $invert es true, intercambiamos las sombras
+  @if $invert {
+      $temp: $shadow-dark;
+      $shadow-dark: $shadow-light;
+      $shadow-light: $temp;
+  }
+
+  // Convertimos los colores de sombra a rgba() con la opacidad deseada
+  $shadow-dark-rgba: rgba(red($shadow-dark), green($shadow-dark), blue($shadow-dark), $opacity);
+  $shadow-light-rgba: rgba(red($shadow-light), green($shadow-light), blue($shadow-light), $opacity);
+
+  // Aplicamos el box-shadow con la relación correcta de valores
+  box-shadow: #{9.91px * $intensity} #{9.91px * $intensity} #{15px * $intensity} $shadow-dark-rgba,
+              #{-9.91px * $intensity} #{-9.91px * $intensity} #{15px * $intensity} $shadow-light-rgba;
+
+  background: $background; // Mantiene el fondo sólido
+}
+
+@mixin neu-text($color, $intensity: 1, $opacity: 1, $invert: false) {
+  // Calculamos las sombras claras y oscuras en base al color del texto
+  $shadow-dark: mix(#000, $color, 70%);
+  $shadow-light: mix(#626262, $color, 70%);
+
+  // Si $invert es true, intercambiamos las sombras
+  @if $invert {
+      $temp: $shadow-dark;
+      $shadow-dark: $shadow-light;
+      $shadow-light: $temp;
+  }
+
+  // Convertimos las sombras a rgba() con la opacidad deseada
+  $shadow-dark-rgba: rgba(red($shadow-dark), green($shadow-dark), blue($shadow-dark), $opacity);
+  $shadow-light-rgba: rgba(red($shadow-light), green($shadow-light), blue($shadow-light), $opacity);
+
+  // Aplicamos el efecto de text-shadow
+  text-shadow: #{2px * $intensity} #{2px * $intensity} #{4px * $intensity} $shadow-dark-rgba,
+               #{-2px * $intensity} #{-2px * $intensity} #{4px * $intensity} $shadow-light-rgba;
+}

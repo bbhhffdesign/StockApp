@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import "bootstrap/dist/css/bootstrap.css";
-import "./css/layout.css"
+// import "bootstrap/dist/css/bootstrap.css";
+// import "./css/layout.css"
 import Login from "./components/Login";
 import Distribuidores from "./components/Distribuidores";
 import Productos from "./components/Productos";

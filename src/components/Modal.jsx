@@ -1,5 +1,5 @@
 import React from "react";
-import "../css/Modal.css"; // Agregamos un archivo CSS para estilos
+// import "../css/Modal.css"; // Agregamos un archivo CSS para estilos
 
 const Modal = ({ children, isOpen, onClose }) => {
   if (!isOpen) return null;
