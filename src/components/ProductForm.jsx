@@ -37,8 +37,8 @@ const ProductForm = ({ user, distribuidor, producto, onProductoAgregado }) => {
     <form onSubmit={handleSubmit} className="p-3 border rounded">
       <h3>{producto ? "Editar Producto" : "Agregar Producto"}</h3>
       <input type="text" placeholder="Nombre del producto" value={nombre} onChange={(e) => setNombre(e.target.value)} className="form-control mb-2" required />
-      <input type="number" placeholder="Cantidad Actual" value={cantActual} onChange={(e) => setCantActual(Number(e.target.value))} className="form-control mb-2" />
-      <input type="number" placeholder="Cantidad Deseada" value={cantDeseada} onChange={(e) => setCantDeseada(Number(e.target.value))} className="form-control mb-2" />
+      <input type="number" placeholder="Cantidad Actual" onChange={(e) => setCantActual(Number(e.target.value))} className="form-control mb-2" />
+      <input type="number" placeholder="Cantidad Deseada"  onChange={(e) => setCantDeseada(Number(e.target.value))} className="form-control mb-2" />
       <button type="submit" className="btn btn-success w-100">{producto ? "Guardar Cambios" : "Agregar Producto"}</button>
     </form>
   );

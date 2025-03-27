@@ -1,0 +1,19 @@
+@use "../abstract/variables" as *;
+@use "../abstract/mixins" as *;
+
+.background{
+    position: absolute;
+    z-index: -2;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 200vh;
+    background: $gray-900;
+}
+
+// .bg-colorchange{
+//     transform: translateY(50%);
+//     transition: transform 1s ease;
+//     // background: linear-gradient(180deg, $gray-900 , $gray-900);
+//   }
+  

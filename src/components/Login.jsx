@@ -7,7 +7,7 @@ import {
 import { signOut } from "firebase/auth";
 import Modal from "./Modal";
 
-const Login = ({ setUser }) => {
+const Login = ({ setUser }, user={user}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isRegistering, setIsRegistering] = useState(false);

@@ -13,6 +13,10 @@
   }
   .login-container form button {
     border: none;
+
+  }
+  .login-container form button:focus{
+    color: red;
   }
   .login-container form button:active {
     /* background: linear-gradient(145deg, #1616166c, #10101048); */
@@ -20,37 +24,10 @@
     transition: all .2s linear;
     background: transparent;
     box-shadow: none;
-    color: $gray-200;
+    color: $gray-100 !important;
     /* border: solid 1px var(--gray-800); */
   }
   .login-container form .btn-register:active{
-    color: $blue ;
+    color: $blue !important;
   }
   
-  .btn-group-nav{
-    border-radius: 0;
-    background-color: var(--gray-700);
-  }
-  
-  .btn-group-nav button{
-    border-radius: 0; 
-    background-color: transparent;
-    border: none;
-    /* border: solid .5px var(--gray-600); */
-    /* box-shadow: inset 9px 9px 18px #1a1a1a,
-              inset -9px -9px 18px #323232; */
-  }
-  .btn-group-nav button:hover,
-  .btn-group-nav button:active,
-  .btn-group-nav button:focus{
-    border: solid .5px var(--gray-600);
-    /* border-left: solid .5px var(--gray-600); */
-    background-color: transparent;
-    box-shadow: inset 9px 9px 18px #111111,
-              inset -9px -9px 18px #3b3b3b;
-
-  }
-  
-  .btn-danger-nav{
-    background-color: rgba(190, 75, 75, 0.739) !important;
-  }
