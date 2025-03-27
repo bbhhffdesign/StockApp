@@ -18,13 +18,23 @@ function App() {
     setUser(null);
   };
 
+  // Establecer siempre la sección a "distribuidores" cuando el usuario se loguee
+  useEffect(() => {
+    if (user) {
+      setSeccion("distribuidores");
+    }
+  }, [user]);
 
   useLayoutEffect(() => {
+    if (!user) return; // Si no hay usuario, no ejecuta la animación
+
+    // Configurar las secciones al inicio
     gsap.set(distribuidoresRef.current, { xPercent: 0, opacity: 1, zIndex: 2 });
     gsap.set(productosRef.current, { xPercent: 100, opacity: 0, zIndex: 1 });
-  }, []);
+  }, [user]); // Se ejecuta cuando el usuario cambia
 
   useLayoutEffect(() => {
+    // Evitar ejecutar la animación si la sección no cambia
     if (prevSeccion.current === seccion) return;
 
     const nuevaSeccion = seccion === "distribuidores" ? distribuidoresRef.current : productosRef.current;
@@ -39,32 +49,61 @@ function App() {
       width: "100%",
     });
 
+    // Animación de la nueva sección
     gsap.fromTo(
       nuevaSeccion,
       { xPercent: direction, opacity: 0, zIndex: 2 },
       { xPercent: 0, opacity: 1, duration: 0.8, ease: "power2.out" }
     );
 
+    // Animación de la sección anterior
     gsap.to(seccionAnterior, { xPercent: direction * -1, opacity: 0, zIndex: 1, duration: 0.8 });
 
-    prevSeccion.current = seccion;
-  }, [seccion]);
+    prevSeccion.current = seccion; // Actualizamos la referencia de la sección actual
+  }, [seccion]); // Esta lógica se ejecuta cada vez que se cambia la sección
+
+  // Gestos touch para cambiar de sección
+  const touchStartRef = useRef(null);
+  const touchEndRef = useRef(null);
+
+  const handleTouchStart = (e) => {
+    touchStartRef.current = e.changedTouches[0].clientX;
+  };
+
+  const handleTouchEnd = (e) => {
+    touchEndRef.current = e.changedTouches[0].clientX;
+
+    if (touchStartRef.current - touchEndRef.current > 50) {
+      // Deslizar de derecha a izquierda
+      if (seccion !== "productos") {
+        setSeccion("productos");
+      }
+    } else if (touchEndRef.current - touchStartRef.current > 50) {
+      // Deslizar de izquierda a derecha
+      if (seccion !== "distribuidores") {
+        setSeccion("distribuidores");
+      }
+    }
+  };
 
   return (
-    <div className={"main-container container-fluid"} >
+    <div
+      className={"main-container container-fluid"}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
       {user ? (
         <>
-          
           <div className="btn-group btn-group-nav w-100">
             <button
               className={`btn ${seccion === "distribuidores" ? "active" : ""}`}
-              onClick={() => setSeccion("distribuidores")}
+              onClick={() => seccion !== "distribuidores" && setSeccion("distribuidores")}
             >
               Distribuidores
             </button>
             <button
               className={`btn ${seccion === "productos" ? "active" : ""}`}
-              onClick={() => setSeccion("productos")}
+              onClick={() => seccion !== "productos" && setSeccion("productos")}
             >
               Productos
             </button>
@@ -72,7 +111,7 @@ function App() {
               X
             </button>
           </div>
-          
+
           <div className="seccion-contenedor">
             <div ref={distribuidoresRef} className="seccion section-distribuidores">
               <Distribuidores user={user} />
@@ -83,10 +122,9 @@ function App() {
           </div>
         </>
       ) : (
-        <Login setUser={setUser} user={user}/>
+        <Login setUser={setUser} user={user} />
       )}
       <div className="background"></div>
-      {/* <div className={`background ${user ? "bg-colorchange" : ""}` }></div> */}
     </div>
   );
 }
