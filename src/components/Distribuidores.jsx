@@ -34,7 +34,7 @@ const Distribuidores = ({ user }) => {
   };
 
   return (
-    <div>
+    <div className="section section-distribuidores">
       <div className="btn-group mb-3">
         <button className="btn btn-success" onClick={() => setMostrarModalDistribuidor(true)}>
           Crear Distribuidor

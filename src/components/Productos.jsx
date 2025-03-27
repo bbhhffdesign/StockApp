@@ -147,7 +147,7 @@ const Productos = ({ user }) => {
   };
 
   return (
-    <div>
+    <div className="section section-productos">
       <button
         className="btn btn-warning mb-3"
         onClick={() => setModoEdicion(!modoEdicion)}

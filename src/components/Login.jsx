@@ -6,8 +6,9 @@ import {
 } from "firebase/auth";
 import { signOut } from "firebase/auth";
 import Modal from "./Modal";
+import {gsap} from "gsap";
 
-const Login = ({ setUser }, user={user}) => {
+const Login = ({ setUser, user }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isRegistering, setIsRegistering] = useState(false);
@@ -17,10 +18,12 @@ const Login = ({ setUser }, user={user}) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const userCredential = isRegistering
+      const userCredential = 
+      isRegistering
         ? await createUserWithEmailAndPassword(auth, email, password)
         : await signInWithEmailAndPassword(auth, email, password);
       setUser(userCredential.user);
+      loginAnimation()
     } catch (error) {
       setErrorMessage("Usuario o contraseña incorrectos.");
       setIsModalOpen(true);
@@ -31,12 +34,14 @@ const Login = ({ setUser }, user={user}) => {
     await signOut(auth);
     setUser(null);
   };
+  
 
   return (
-    <div className="login-container ">
-      <form onSubmit={handleSubmit}>
+    
+  <div className="section section-login login-container">
+    
+      <form className={user ? "nav-shadow-off" : ""}  onSubmit={handleSubmit}>
         <h2 className="h2-title mb-4">Control de Stock</h2>
-
 
         <div className="input-group mb-2">
           
