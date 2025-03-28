@@ -4,13 +4,15 @@
 .main-container {
   min-height: 100svh;
   background-color: transparent;
+  overflow: hidden;
+  
 }
-
 .seccion-contenedor {
   position: relative; /* Para que las secciones absolutas se alineen dentro */
   width: 100%;
+  // max-width: 100vw;
+  // min-width: 100vw;
   height: 100vh; /* Ajustar la altura de las secciones */
-  overflow: hidden;
 
   .seccion {
     position: absolute;

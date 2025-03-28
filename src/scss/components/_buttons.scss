@@ -5,8 +5,6 @@
     border-radius: 0.5rem;
     width: 100%;
     transition: all .5s linear;
-    // background: linear-gradient(145deg, #191919, #1e1e1e);
-    // box-shadow: 5px 5px 14px #131313, -5px -5px 14px #252525;
     @include neu-top( $black, 1.5, .2, false) ;
 
     
@@ -14,9 +12,6 @@
   .login-container form button {
     border: none;
 
-  }
-  .login-container form button:focus{
-    color: red;
   }
   .login-container form button:active {
     /* background: linear-gradient(145deg, #1616166c, #10101048); */
@@ -31,3 +26,18 @@
     color: $blue !important;
   }
   
+  .btn-add-product{
+    border: none;
+    padding: .5rem 1rem;
+    @include neu-top( $gray-900, .5, .5, false) ;
+    transition: all .5s ease;
+    color: $blue;
+  }
+
+  .btn-add-product:active{
+    background: transparent;
+    box-shadow: none;
+  }
+  .btn-remove-dist{
+    color: $red;
+  }

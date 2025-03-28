@@ -52,17 +52,17 @@ function App() {
     // Animación de la nueva sección
     gsap.fromTo(
       nuevaSeccion,
-      { xPercent: direction, opacity: 0, zIndex: 2 },
-      { xPercent: 0, opacity: 1, duration: 0.8, ease: "power2.out" }
+      { xPercent: direction, opacity: 1, zIndex: 2 , ease: "none"},
+      { xPercent: 0, opacity: 1, duration: 0.5, ease: "none" }
     );
 
     // Animación de la sección anterior
-    gsap.to(seccionAnterior, { xPercent: direction * -1, opacity: 0, zIndex: 1, duration: 0.8 });
+    gsap.to(seccionAnterior, { xPercent: direction * -1, opacity: 0, zIndex: 1, duration: 0.5, ease: "none" });
 
     prevSeccion.current = seccion; // Actualizamos la referencia de la sección actual
   }, [seccion]); // Esta lógica se ejecuta cada vez que se cambia la sección
 
-  // Gestos touch para cambiar de sección
+  // Gestos touch para cambiar de sección (solo cuando hay usuario)
   const touchStartRef = useRef(null);
   const touchEndRef = useRef(null);
 
@@ -89,8 +89,9 @@ function App() {
   return (
     <div
       className={"main-container container-fluid"}
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
+      // Solo activar los gestos cuando haya un usuario logueado
+      onTouchStart={user ? handleTouchStart : null}
+      onTouchEnd={user ? handleTouchEnd : null}
     >
       {user ? (
         <>
@@ -108,7 +109,7 @@ function App() {
               Productos
             </button>
             <button className="btn btn-danger btn-danger-nav" onClick={handleLogout}>
-              X
+            <i class="fa fa-user-times" aria-hidden="true"></i>
             </button>
           </div>
 

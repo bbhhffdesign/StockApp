@@ -32,24 +32,32 @@ const Distribuidores = ({ user }) => {
       console.error("Error al eliminar distribuidor", error);
     }
   };
+  function capitalizeFirst(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
 
   return (
     <div className="section section-distribuidores">
-      <div className="btn-group mb-3">
-        <button className="btn btn-success" onClick={() => setMostrarModalDistribuidor(true)}>
-          Crear Distribuidor
-        </button>
-        <button className="btn btn-warning" onClick={() => setModoEdicion(!modoEdicion)}>
-          {modoEdicion ? "Salir del modo edición" : "Modo edición"}
+      <div className="btn-group dist-buttons mb-3 d-flex">
+        {modoEdicion ? 
+        <button className="btn btn-edit-true" onClick={() => setModoEdicion(!modoEdicion)}>
+          Editar
+        </button> : 
+        <button className="btn " onClick={() => setModoEdicion(!modoEdicion)}>
+        Editar       
+      </button> 
+        }
+        <button className="btn" onClick={() => setMostrarModalDistribuidor(true)}>
+          Crear
         </button>
       </div>
-      <h3 className="mt-4">Distribuidores</h3>
       {distribuidores.length > 0 ? (
-        <ul className="list-group mb-4">
+        <ul className="list-group mb-4 list-distribuidores">
           {distribuidores.map(distribuidor => (
-            <li
+            <>
+            <li 
               key={distribuidor.id}
-              className="list-group-item d-flex justify-content-between align-items-center"
+              className="list-group-item d-flex justify-content-between align-items-center "
               onClick={() => {
                 if (modoEdicion) {
                   setDistribuidorSeleccionado(distribuidor);
@@ -57,27 +65,32 @@ const Distribuidores = ({ user }) => {
                 }
               }}
             >
-              <div>
-                <strong>{distribuidor.nombre}</strong> - {distribuidor.diaSemana} <br />
-                <small>📞 {distribuidor.telefono}</small>
+              <div className="dist-text-container">
+                <div>
+                <strong>{capitalizeFirst(distribuidor.nombre)}</strong> <span>{distribuidor.diaSemana}</span> 
+                </div>
+                <small><i class="fa fa-phone" aria-hidden="true"></i> {distribuidor.telefono} </small>
               </div>
               {modoEdicion ? (
-                <button className="btn btn-danger btn-sm" onClick={(event) => {
+                <button className="rounded-1 btn-add-product btn-remove-dist" onClick={(event) => {
                   event.stopPropagation();
                   handleEliminarDistribuidor(distribuidor.id);
                 }}>
-                  ×
+                  <i class="fa fa-trash-o" aria-hidden="true"></i>
                 </button>
               ) : (
-                <button className="btn btn-primary btn-sm" onClick={() => {
-                  setDistribuidorSeleccionado(distribuidor.id); // 🔹 Usa el ID en lugar del nombre
+                <button className="rounded-1 btn-add-product" onClick={() => {
+                  setDistribuidorSeleccionado(distribuidor.id);
                   setMostrarModalProducto(true);
                 }}>
-                  +
+                  <i class="fa fa-plus" aria-hidden="true"></i>
                 </button>
+                
               )}
             </li>
+            </>
           ))}
+          
         </ul>
       ) : (
         <p>No hay distribuidores aún.</p>

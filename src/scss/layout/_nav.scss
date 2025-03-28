@@ -1,33 +1,11 @@
 @use "../abstract/variables" as *;
 @use "../abstract/mixins" as *;
 
-// .btn-group-nav{
-//   position: relative;
-//     border-radius: 0;
-//     margin: 1rem 0 1rem 0;
-    
-//     &::after{
-//       content: "";
-//       position: absolute;
-//       border-radius: inherit;
-//       inset: 0;
-//       z-index: 1;
-//       pointer-events: none;
-//       @include neu-top-soft($gray-900, .3, 0, false);
-//     }
-//   }
-  
-//   .btn-group-nav button{
-//     border-radius: 0; 
-//     background-color: transparent;
-//     border: none;
-
-//   }
 .btn-group-nav {
   position: absolute;
+  display: flex;
   border-radius: 0;
   margin: 1rem 0;
-  display: flex;
 
   &::after {
     overflow: hidden;
@@ -36,21 +14,36 @@
     border-radius: inherit;
     inset: 0;
     z-index: 0;
-    pointer-events: none;
     @include neu-top-soft($gray-900, 0.3, 0, false);
+    pointer-events: none;
+  }
+}
+.btn-group-nav {
+ 
+  .active {
+    transition: all 0.5s ease;
+    color: $gray-100 !important;
+    background: linear-gradient(0deg, $gray-900, $gray-700);
+
+ 
   }
 }
 
 .btn-group-nav button {
   position: relative;
   flex: 1;
-  border-radius: 0;
-  // background-color: transparent;
+  border-radius: 0.5rem;
   border: none;
   transition: all 0.1s ease-in-out;
-  overflow: hidden;
-  // outline: solid 10px red;
-  // z-index: 0;
+  padding: .8rem 0;
+  font-size: 1.2rem;
+  // z-index: -1;
+}
 
-
+.btn-danger-nav{
+  border-top-right-radius: .5rem !important;
+  border-bottom-right-radius: .5rem !important;
+  .fa-user-times{
+    color: $gray-400;
+  }
 }

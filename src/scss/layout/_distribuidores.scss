@@ -1,0 +1,66 @@
+@use "../abstract/variables" as *;
+@use "../abstract/mixins" as *;
+
+.list-distribuidores {
+  // @include neu-gradient($gray-900, 1, 1, 45deg, 1);
+  // @include grad-bg($gray-900, $gray-800, 0deg);
+  //   background: #262626;
+  //   box-shadow: inset 20px 20px 60px $gray-900, inset -20px -20px 60px $gray-1000;
+
+  .dist-text-container {
+    // background-color: red;
+    width: 100%;
+
+    div {
+      display: flex;
+      justify-content: space-between;
+      padding-right: 1.5rem;
+    }
+  }
+
+  li {
+    border: none;
+    background-color: transparent;
+    margin-bottom: 0.5rem;
+    border-radius: 0.5rem;
+    // @include neu-bottom($gray-900, 2, 0.2, false);
+    @include neu-top($gray-900, .5, .5, false);
+    overflow: hidden;
+    font-size: 1.2rem;
+    color: $gray-100;
+
+    small {
+      color: $gray-200;
+      i {
+        color: $blue;
+      }
+    }
+  }
+  .list-dist-hr {
+    margin: 1rem auto;
+    width: 50%;
+  }
+}
+
+.dist-buttons {
+  @include neu-bottom($gray-800, 1, 1, false);
+  border-radius: 0.5rem;
+  color: $gray-200;
+
+  button {
+    color: $gray-200;
+    font-size: 1.2rem;
+    &:active,
+    &:focus {
+      color: white;
+      background:linear-gradient(45deg,  $gray-600,  $gray-800);
+      border: none;
+    }
+  }
+  .btn-edit-true{
+    color: $red !important ;
+    background:linear-gradient(45deg,  $gray-600,  $gray-800);
+      border: solid 1px $gray-400 !important;
+    // box-shadow: 10px 10px red;
+  }
+}
