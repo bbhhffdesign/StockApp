@@ -57,10 +57,10 @@
       border: none;
     }
   }
-  .btn-edit-true{
-    color: $red !important ;
-    background:linear-gradient(45deg,  $gray-600,  $gray-800);
-      border: solid 1px $gray-400 !important;
-    // box-shadow: 10px 10px red;
-  }
+ 
+}
+.btn-edit-true{
+  color: $red !important;
+  background:linear-gradient(45deg,  $gray-600,  $gray-800);
+    border: solid 1px $gray-400 !important;
 }

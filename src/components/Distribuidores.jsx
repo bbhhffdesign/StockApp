@@ -39,14 +39,10 @@ const Distribuidores = ({ user }) => {
   return (
     <div className="section section-distribuidores">
       <div className="btn-group dist-buttons mb-3 d-flex">
-        {modoEdicion ? 
-        <button className="btn btn-edit-true" onClick={() => setModoEdicion(!modoEdicion)}>
+      <button className={modoEdicion ? "btn btn-edit-true" : "btn"} onClick={() => setModoEdicion(!modoEdicion)}>
           Editar
-        </button> : 
-        <button className="btn " onClick={() => setModoEdicion(!modoEdicion)}>
-        Editar       
-      </button> 
-        }
+        </button>  
+
         <button className="btn" onClick={() => setMostrarModalDistribuidor(true)}>
           Crear
         </button>

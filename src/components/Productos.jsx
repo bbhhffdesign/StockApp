@@ -148,27 +148,32 @@ const Productos = ({ user }) => {
 
   return (
     <div className="section section-productos">
-      <button
-        className="btn btn-warning mb-3"
-        onClick={() => setModoEdicion(!modoEdicion)}
-      >
-        {modoEdicion ? "Salir del modo edición" : "Modo edición"}
-      </button>
-      <button
-        className="btn btn-info mb-3"
-        onClick={() =>
-          logProductosFaltantes(productosPorDistribuidor, nombresDistribuidores)
-        }
-      >
-        Copiar productos faltantes 📋
-      </button>
+      <div className="btn-group dist-buttons d-flex mb-3">
+        <button
+          className={modoEdicion ? "btn btn-edit-true" : "btn"}
+          onClick={() => setModoEdicion(!modoEdicion)}
+        >
+          Editar
+        </button>
+        <button
+          className="btn"
+          onClick={() =>
+            logProductosFaltantes(
+              productosPorDistribuidor,
+              nombresDistribuidores
+            )
+          }
+        >
+          Copiar Lista
+        </button> 
+      </div>
 
       {Object.keys(productosPorDistribuidor).length > 0 ? (
         Object.keys(productosPorDistribuidor).map((distribuidorId) => (
           <div key={distribuidorId} className="mb-4">
-            <table className="table table-bordered">
+            <table className="table-products">
               <thead>
-                <tr className="table-primary">
+                <tr className="">
                   <th colSpan={modoEdicion ? 4 : 3} className="text-center">
                     {nombresDistribuidores[distribuidorId]?.nombre ||
                       "Cargando..."}
@@ -186,10 +191,10 @@ const Productos = ({ user }) => {
                     </button>
                   </th>
                 </tr>
-                <tr className="table-light">
-                  <th>Nombre</th>
-                  <th>Cant. Actual</th>
-                  <th>Cant. Deseada</th>
+                <tr className="table-products-header">
+                  <th><small>Nombre</small></th>
+                  <th><small>Actual</small></th>
+                  <th><small>Deseada</small></th>
                   {modoEdicion && <th>Acciones</th>}
                 </tr>
               </thead>
@@ -200,7 +205,7 @@ const Productos = ({ user }) => {
                     <React.Fragment key={producto.id}>
                       <tr
                         style={{
-                          backgroundColor: faltante ? "#ffcccc" : "#ccffcc",
+                          backgroundColor: faltante ? "#f1474775" : "#53f05389",
                         }}
                         onClick={() => {
                           if (modoEdicion) {

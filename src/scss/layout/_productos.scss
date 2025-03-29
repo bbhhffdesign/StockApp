@@ -1,0 +1,18 @@
+@use "../abstract/variables" as *;
+@use "../abstract/mixins" as *;
+
+.table-products{
+    width: 100%;
+    @include neu-top($gray-900, .5, .5, false);
+    // background-color: #f1474775;
+    // background-color: #53f05389;
+
+    .table-products-header{
+        @include neu-bottom($gray-900, 2, 0.2, false);
+    }
+
+    *{
+        font-size: 1rem;
+
+    }
+}

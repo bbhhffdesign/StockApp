@@ -109,7 +109,7 @@ function App() {
               Productos
             </button>
             <button className="btn btn-danger btn-danger-nav" onClick={handleLogout}>
-            <i class="fa fa-user-times" aria-hidden="true"></i>
+            <i className="fa fa-user-times" aria-hidden="true"></i>
             </button>
           </div>
 
