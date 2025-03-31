@@ -198,21 +198,25 @@ h3,
   color: #da7070;
 }
 
+.page-container {
+  width: 100vw;
+  height: 100vh;
+  overflow-x: hidden;
+}
+
 .main-container {
   min-height: 100svh;
+  height: auto;
   background-color: transparent;
-  overflow: hidden;
 }
 
 .seccion-contenedor {
-  position: relative; /* Para que las secciones absolutas se alineen dentro */
+  position: relative;
   width: 100%;
-  height: 100vh; /* Ajustar la altura de las secciones */
 }
 .seccion-contenedor .seccion {
   position: absolute;
   width: 100%;
-  height: 100%;
   top: 0;
   left: 0;
 }
@@ -240,7 +244,6 @@ h3,
   top: 0;
   left: 0;
   width: 100vw;
-  height: 200vh;
   background: #1f1f1f;
 }
 
@@ -403,6 +406,9 @@ h3,
 }
 .table-products .products-header button .fa-whatsapp {
   font-size: 1.5rem;
+}
+.table-products .table-products-header {
+  border-bottom: solid 2px #262626;
 }
 .table-products .table-products-header th, .table-products .table-products-header tr, .table-products .table-products-header td {
   text-align: center;

@@ -1,23 +1,28 @@
 @use "../abstract/variables" as *;
 @use "../abstract/mixins" as *;
 
+.page-container{
+  width: 100vw;
+  height: 100vh;
+  overflow-x: hidden;
+}
 .main-container {
   min-height: 100svh;
+  height: auto;
   background-color: transparent;
-  overflow: hidden;
+  // overflow-x: hidden;
+  // overflow-y: visible;
   
 }
+
+
 .seccion-contenedor {
-  position: relative; /* Para que las secciones absolutas se alineen dentro */
+  position: relative;
   width: 100%;
-  // max-width: 100vw;
-  // min-width: 100vw;
-  height: 100vh; /* Ajustar la altura de las secciones */
 
   .seccion {
     position: absolute;
     width: 100%;
-    height: 100%;
     top: 0;
     left: 0;
   }

@@ -37,8 +37,14 @@ function App() {
     // Evitar ejecutar la animación si la sección no cambia
     if (prevSeccion.current === seccion) return;
 
-    const nuevaSeccion = seccion === "distribuidores" ? distribuidoresRef.current : productosRef.current;
-    const seccionAnterior = prevSeccion.current === "distribuidores" ? distribuidoresRef.current : productosRef.current;
+    const nuevaSeccion =
+      seccion === "distribuidores"
+        ? distribuidoresRef.current
+        : productosRef.current;
+    const seccionAnterior =
+      prevSeccion.current === "distribuidores"
+        ? distribuidoresRef.current
+        : productosRef.current;
 
     const direction = seccion === "distribuidores" ? -200 : 100;
 
@@ -52,12 +58,18 @@ function App() {
     // Animación de la nueva sección
     gsap.fromTo(
       nuevaSeccion,
-      { xPercent: direction, opacity: 1, zIndex: 2 , ease: "none"},
+      { xPercent: direction, opacity: 1, zIndex: 2, ease: "none" },
       { xPercent: 0, opacity: 1, duration: 0.5, ease: "none" }
     );
 
     // Animación de la sección anterior
-    gsap.to(seccionAnterior, { xPercent: direction * -1, opacity: 0, zIndex: 1, duration: 0.5, ease: "none" });
+    gsap.to(seccionAnterior, {
+      xPercent: direction * -1,
+      opacity: 0,
+      zIndex: 1,
+      duration: 0.5,
+      ease: "none",
+    });
 
     prevSeccion.current = seccion; // Actualizamos la referencia de la sección actual
   }, [seccion]); // Esta lógica se ejecuta cada vez que se cambia la sección
@@ -87,46 +99,60 @@ function App() {
   };
 
   return (
-    <div
-      className={"main-container container-fluid"}
-      // Solo activar los gestos cuando haya un usuario logueado
-      onTouchStart={user ? handleTouchStart : null}
-      onTouchEnd={user ? handleTouchEnd : null}
-    >
-      {user ? (
-        <>
-          <div className="btn-group btn-group-nav w-100">
-            <button
-              className={`btn ${seccion === "distribuidores" ? "active" : ""}`}
-              onClick={() => seccion !== "distribuidores" && setSeccion("distribuidores")}
-            >
-              Distribuidores
-            </button>
-            <button
-              className={`btn ${seccion === "productos" ? "active" : ""}`}
-              onClick={() => seccion !== "productos" && setSeccion("productos")}
-            >
-              Productos
-            </button>
-            <button className="btn btn-danger btn-danger-nav" onClick={handleLogout}>
-            <i className="fa fa-user-times" aria-hidden="true"></i>
-            </button>
-          </div>
+    <section className="page-container">
+      <div
+        className={"main-container container-fluid"}
+        // Solo activar los gestos cuando haya un usuario logueado
+        onTouchStart={user ? handleTouchStart : null}
+        onTouchEnd={user ? handleTouchEnd : null}
+      >
+        {user ? (
+          <>
+            <div className="btn-group btn-group-nav w-100">
+              <button
+                className={`btn ${
+                  seccion === "distribuidores" ? "active" : ""
+                }`}
+                onClick={() =>
+                  seccion !== "distribuidores" && setSeccion("distribuidores")
+                }
+              >
+                Distribuidores
+              </button>
+              <button
+                className={`btn ${seccion === "productos" ? "active" : ""}`}
+                onClick={() =>
+                  seccion !== "productos" && setSeccion("productos")
+                }
+              >
+                Productos
+              </button>
+              <button
+                className="btn btn-danger btn-danger-nav"
+                onClick={handleLogout}
+              >
+                <i className="fa fa-user-times" aria-hidden="true"></i>
+              </button>
+            </div>
 
-          <div className="seccion-contenedor">
-            <div ref={distribuidoresRef} className="seccion section-distribuidores">
-              <Distribuidores user={user} />
+            <div className="seccion-contenedor">
+              <div
+                ref={distribuidoresRef}
+                className="seccion section-distribuidores"
+              >
+                <Distribuidores user={user} />
+              </div>
+              <div ref={productosRef} className="seccion section-productos">
+                <Productos user={user} />
+              </div>
             </div>
-            <div ref={productosRef} className="seccion section-productos">
-              <Productos user={user} />
-            </div>
-          </div>
-        </>
-      ) : (
-        <Login setUser={setUser} user={user} />
-      )}
-      <div className="background"></div>
-    </div>
+          </>
+        ) : (
+          <Login setUser={setUser} user={user} />
+        )}
+        <div className="background"></div>
+      </div>
+    </section>
   );
 }
 

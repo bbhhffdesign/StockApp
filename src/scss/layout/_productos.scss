@@ -46,6 +46,7 @@
     }
 
     .table-products-header{
+        border-bottom: solid 2px $gray-800;
         th,tr,td{
             text-align: center;
             padding: 0;
