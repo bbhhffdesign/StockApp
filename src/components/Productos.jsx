@@ -203,7 +203,7 @@ const Productos = ({ user }) => {
                 </tr>
               </thead>
               <tbody>
-                {productosPorDistribuidor[distribuidorId].map((producto) => {
+                {productosPorDistribuidor[distribuidorId].map((producto, index) => {
                   const faltante = producto.cantActual < producto.cantDeseada;
                   return (
                     <React.Fragment key={producto.id}>
@@ -220,6 +220,9 @@ const Productos = ({ user }) => {
                           }
                         }}
                       >
+
+                        {}
+
                         <td>{producto.nombre}</td>
                         <td className={faltante ? "cant-actual-faltante" : "cant-actual"}>{producto.cantActual}</td>
                         <td className="cant-deseada">{producto.cantDeseada}</td>
@@ -234,7 +237,7 @@ const Productos = ({ user }) => {
                                   producto.id
                                 );
                               }}
-                            >
+                              >
                               <i class="fa fa-times-circle-o" aria-hidden="true"></i>
                             </button>
                           </td>

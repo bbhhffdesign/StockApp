@@ -6,6 +6,7 @@
     @include neu-top-soft($gray-900, .3, 1, false);
     border-radius: .5rem;
     overflow: hidden;
+    padding-bottom: .5rem;
     
     .list-distr-name{
         padding: 0;
@@ -106,6 +107,13 @@
             }
         }
     }
+    .row-hr{
+        position: absolute;
+        width: 100%;
+        margin: 0 ;
+
+    }
+
     .cant-actual-faltante{
         color: rgba(245, 112, 112, 0.524);
     }
