@@ -43,15 +43,15 @@
 }
 
 .dist-buttons {
-  @include neu-bottom($gray-800, 1, 1, false);
+  // @include neu-bottom($gray-800, 1, 1, false);
+  @include neu-top-soft($gray-900, 0.3, 0, false);
   border-radius: 0.5rem;
   color: $gray-200;
 
   button {
     color: $gray-200;
     font-size: 1.2rem;
-    &:active,
-    &:focus {
+    &:active{
       color: white;
       background:linear-gradient(45deg,  $gray-600,  $gray-800);
       border: none;

@@ -173,12 +173,15 @@ const Productos = ({ user }) => {
           <div key={distribuidorId} className="mb-4">
             <table className="table-products">
               <thead>
-                <tr className="">
-                  <th colSpan={modoEdicion ? 4 : 3} className="text-center">
+                <tr className="table-products-header-top">
+                  <th colSpan={modoEdicion ? 4 : 3} className="text-center list-distr-name">
+                    <div className="products-header">
+                    <h3>
                     {nombresDistribuidores[distribuidorId]?.nombre ||
                       "Cargando..."}
+                    </h3>
                     <button
-                      className="btn btn-success btn-sm ms-2"
+                      className="btn btn-sm ms-2 btn-wpp"
                       onClick={() =>
                         enviarMensajeWhatsApp(
                           distribuidorId,
@@ -187,15 +190,16 @@ const Productos = ({ user }) => {
                         )
                       }
                     >
-                      WPP
+                     <i class="fa fa-whatsapp" aria-hidden="true"></i>
                     </button>
+                    </div>
                   </th>
                 </tr>
-                <tr className="table-products-header">
+                <tr className={modoEdicion ? "table-products-header-large" : "table-products-header"}>
                   <th><small>Nombre</small></th>
                   <th><small>Actual</small></th>
                   <th><small>Deseada</small></th>
-                  {modoEdicion && <th>Acciones</th>}
+                  {modoEdicion && <th><i class="fa fa-times-circle-o" aria-hidden="true"></i></th>}
                 </tr>
               </thead>
               <tbody>
@@ -203,10 +207,7 @@ const Productos = ({ user }) => {
                   const faltante = producto.cantActual < producto.cantDeseada;
                   return (
                     <React.Fragment key={producto.id}>
-                      <tr
-                        style={{
-                          backgroundColor: faltante ? "#f1474775" : "#53f05389",
-                        }}
+                      <tr className={faltante ? "producto producto-faltante" : "producto producto-suficiente"}
                         onClick={() => {
                           if (modoEdicion) {
                             setProductoSeleccionado(producto);
@@ -220,12 +221,12 @@ const Productos = ({ user }) => {
                         }}
                       >
                         <td>{producto.nombre}</td>
-                        <td>{producto.cantActual}</td>
-                        <td>{producto.cantDeseada}</td>
+                        <td className={faltante ? "cant-actual-faltante" : "cant-actual"}>{producto.cantActual}</td>
+                        <td className="cant-deseada">{producto.cantDeseada}</td>
                         {modoEdicion && (
                           <td>
                             <button
-                              className="btn btn-danger btn-sm"
+                              className="btn btn-sm btn-delete-product"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 handleEliminarProducto(
@@ -234,16 +235,17 @@ const Productos = ({ user }) => {
                                 );
                               }}
                             >
-                              ×
+                              <i class="fa fa-times-circle-o" aria-hidden="true"></i>
                             </button>
                           </td>
                         )}
                       </tr>
                       {filaExpandida === producto.id && !modoEdicion && (
-                        <tr>
+                        <tr className="fila-expandida">
                           <td colSpan="3" className="text-center">
+                            <div className="btn-group w-100">
                             <button
-                              className="btn btn-outline-secondary me-2"
+                              className="btn"
                               onClick={() =>
                                 actualizarCantidadProducto(
                                   distribuidorId,
@@ -256,7 +258,16 @@ const Productos = ({ user }) => {
                               -{multiplicarPorDiez ? "10" : "1"}
                             </button>
                             <button
-                              className="btn btn-outline-secondary me-2"
+                            
+                              className={multiplicarPorDiez ?  "btn btn-multiplicar-on" : "btn btn-multiplicar btn-multiplicar"}
+                              onClick={() =>
+                                setMultiplicarPorDiez(!multiplicarPorDiez)
+                              }
+                            >
+                              ×10
+                            </button>
+                            <button
+                              className="btn"
                               onClick={() =>
                                 actualizarCantidadProducto(
                                   distribuidorId,
@@ -268,18 +279,9 @@ const Productos = ({ user }) => {
                             >
                               +{multiplicarPorDiez ? "10" : "1"}
                             </button>
-                            <button
-                              className={`btn ${
-                                multiplicarPorDiez
-                                  ? "btn-warning"
-                                  : "btn-outline-warning"
-                              }`}
-                              onClick={() =>
-                                setMultiplicarPorDiez(!multiplicarPorDiez)
-                              }
-                            >
-                              ×10
-                            </button>
+                          
+
+                            </div>
                           </td>
                         </tr>
                       )}
