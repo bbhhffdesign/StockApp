@@ -17,25 +17,25 @@
         @include grad-bg($gray-900, $gray-1000, 45deg);
         
         button{
-            position: absolute;
-            top: 0;
-            right: -1px;
-            padding: 0;
-            height: auto;
-            width: 10%;
-            border-top-left-radius: 0px ;
-            border-bottom-left-radius: 0px ;
-            border-bottom-right-radius: 0px ;
-            width: 3rem;
-            height: 100%;
-            @include neu-bottom($gray-900, 1, 1, false);
-            border: none;
+            // position: absolute;
+            // top: 0;
+            // right: -1px;
+            // padding: 0;
+            // height: auto;
+            // width: 10%;
+            // border-top-left-radius: 0px ;
+            // border-bottom-left-radius: 0px ;
+            // border-bottom-right-radius: 0px ;
+            // width: 3rem;
+            // height: 100%;
+            // @include neu-bottom($gray-900, 1, 1, false);
+            // border: none;
 
 
-            &:active{
-                @include neu-bottom($gray-900, 0, 0, false);
-                color: $gray-200;
-            }
+            // &:active{
+            //     @include neu-bottom($gray-900, 0, 0, false);
+            //     color: $gray-200;
+            // }
 
             .fa-whatsapp{
                 font-size: 1.5rem;

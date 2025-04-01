@@ -198,6 +198,14 @@ h3,
   color: #da7070;
 }
 
+.mensaje-alerta {
+  background-color: red;
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 5rem;
+}
+
 .page-container {
   width: 100vw;
   height: 100vh;
@@ -382,27 +390,6 @@ h3,
 .table-products .products-header {
   position: relative;
   background: linear-gradient(45deg, #1f1f1f, #111111);
-}
-.table-products .products-header button {
-  position: absolute;
-  top: 0;
-  right: -1px;
-  padding: 0;
-  height: auto;
-  width: 10%;
-  border-top-left-radius: 0px;
-  border-bottom-left-radius: 0px;
-  border-bottom-right-radius: 0px;
-  width: 3rem;
-  height: 100%;
-  box-shadow: inset -5px -5px 15px rgb(6, 6, 6), inset 5px 5px 15px rgb(57, 57, 57);
-  background: rgb(31, 31, 31);
-  border: none;
-}
-.table-products .products-header button:active {
-  box-shadow: inset -5px -5px 15px rgba(31, 31, 31, 0), inset 5px 5px 15px rgba(31, 31, 31, 0);
-  background: rgba(31, 31, 31, 0);
-  color: #8a8a8a;
 }
 .table-products .products-header button .fa-whatsapp {
   font-size: 1.5rem;

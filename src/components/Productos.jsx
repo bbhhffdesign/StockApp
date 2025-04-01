@@ -22,6 +22,7 @@ const Productos = ({ user }) => {
     useState(null);
   const [mostrarModalProducto, setMostrarModalProducto] = useState(false);
   const [multiplicarPorDiez, setMultiplicarPorDiez] = useState(false);
+  const [mensajeAlerta, setMensajeAlerta] = useState("");
 
   useEffect(() => {
     if (!user) return;
@@ -149,8 +150,38 @@ const Productos = ({ user }) => {
     window.open(url, "_blank");
   };
 
+  
+  
+  const copiarPedidoPorDistribuidor= (distribuidorId, productosPorDistribuidor, nombresDistribuidores) => {
+    const distribuidor = nombresDistribuidores[distribuidorId];
+    if (!distribuidor) return;
+  
+    // const { nombre, telefono } = distribuidor;
+    const productosFaltantes = productosPorDistribuidor[distribuidorId]
+      .filter((producto) => producto.cantActual < producto.cantDeseada)
+      .map(
+        (producto) => `- ${producto.nombre} ${producto.cantDeseada - producto.cantActual}`
+      )
+      .join("\n");
+
+      // alert(productosFaltantes);
+      navigator.clipboard.writeText(productosFaltantes)
+      .then(() => {
+        // alertSmall("copiado");
+      })
+      .catch((err)=> {
+        // alertSmall("error")
+      })
+  
+    if (!productosFaltantes) {
+      alert("No hay productos faltantes para este distribuidor.");
+      return;
+    }
+  }
+
   return (
     <div className="section section-productos">
+        
       <div className="btn-group dist-buttons d-flex mb-3">
         <button
           className={modoEdicion ? "btn btn-edit-true" : "btn"}
@@ -170,6 +201,11 @@ const Productos = ({ user }) => {
           Copiar Lista
         </button> 
       </div>
+
+
+
+
+
       {Object.keys(productosPorDistribuidor).length > 0 ? (
   Object.keys(productosPorDistribuidor)
     .filter((distribuidorId) => nombresDistribuidores[distribuidorId]?.nombre) 
@@ -181,6 +217,7 @@ const Productos = ({ user }) => {
               <th colSpan={modoEdicion ? 4 : 3} className="text-center list-distr-name">
                 <div className="products-header">
                   <h3>{nombresDistribuidores[distribuidorId].nombre}</h3>
+                  <div className="btn-group">
                   <button
                     className="btn btn-sm ms-2 btn-wpp"
                     onClick={() =>
@@ -194,6 +231,12 @@ const Productos = ({ user }) => {
                   >
                     <i className="fa fa-whatsapp" aria-hidden="true"></i>
                   </button>
+                  <button className="btn copy-distri" onClick={()=> copiarPedidoPorDistribuidor(
+                        distribuidorId,
+                        productosPorDistribuidor,
+                        nombresDistribuidores
+                      )}>copiar</button>
+                  </div>
                 </div>
               </th>
             </tr>
@@ -211,7 +254,10 @@ const Productos = ({ user }) => {
                 <React.Fragment key={producto.id}>
                   <tr
                     className={faltante ? "producto producto-faltante" : "producto producto-suficiente"}
-                    onClick={() => {
+                   
+                  >
+                    <td>{producto.nombre}</td>
+                    <td className={faltante ? "cant-actual-faltante" : "cant-actual"}  onClick={() => {
                       if (modoEdicion) {
                         setProductoSeleccionado(producto);
                         setDistribuidorSeleccionado(distribuidorId);
@@ -219,10 +265,7 @@ const Productos = ({ user }) => {
                       } else {
                         setFilaExpandida(filaExpandida === producto.id ? null : producto.id);
                       }
-                    }}
-                  >
-                    <td>{producto.nombre}</td>
-                    <td className={faltante ? "cant-actual-faltante" : "cant-actual"}>{producto.cantActual}</td>
+                    }}>{producto.cantActual}</td>
                     <td className="cant-deseada">{producto.cantDeseada}</td>
                     {modoEdicion && (
                       <td>
@@ -248,17 +291,17 @@ const Productos = ({ user }) => {
                               actualizarCantidadProducto(
                                 distribuidorId,
                                 producto.id,
-                                producto.cantActual - (multiplicarPorDiez ? 10 : 1)
+                                producto.cantActual - (multiplicarPorDiez ? 5 : 1)
                               )
                             }
                           >
-                            -{multiplicarPorDiez ? "10" : "1"}
+                            -{multiplicarPorDiez ? "5" : "1"}
                           </button>
                           <button
                             className={multiplicarPorDiez ? "btn btn-multiplicar-on" : "btn btn-multiplicar"}
                             onClick={() => setMultiplicarPorDiez(!multiplicarPorDiez)}
                           >
-                            ×10
+                            {multiplicarPorDiez ? "x5" : "x1"}
                           </button>
                           <button
                             className="btn"
@@ -266,11 +309,11 @@ const Productos = ({ user }) => {
                               actualizarCantidadProducto(
                                 distribuidorId,
                                 producto.id,
-                                producto.cantActual + (multiplicarPorDiez ? 10 : 1)
+                                producto.cantActual + (multiplicarPorDiez ? 5 : 1)
                               )
                             }
                           >
-                            +{multiplicarPorDiez ? "10" : "1"}
+                            +{multiplicarPorDiez ? "5" : "1"}
                           </button>
                         </div>
                       </td>
