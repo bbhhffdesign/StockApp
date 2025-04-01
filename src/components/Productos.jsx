@@ -10,7 +10,8 @@ import {
 } from "firebase/firestore";
 import Modal from "./Modal";
 import ProductForm from "./ProductForm";
-import logProductosFaltantes from "../js/productosFaltantes";
+import BotonCopiarLista from "./BotonCopiarLista";
+import BotonCopiar from "./BotonCopiar";
 
 const Productos = ({ user }) => {
   const [productosPorDistribuidor, setProductosPorDistribuidor] = useState({});
@@ -152,33 +153,6 @@ const Productos = ({ user }) => {
 
   
   
-  const copiarPedidoPorDistribuidor= (distribuidorId, productosPorDistribuidor, nombresDistribuidores) => {
-    const distribuidor = nombresDistribuidores[distribuidorId];
-    if (!distribuidor) return;
-  
-    // const { nombre, telefono } = distribuidor;
-    const productosFaltantes = productosPorDistribuidor[distribuidorId]
-      .filter((producto) => producto.cantActual < producto.cantDeseada)
-      .map(
-        (producto) => `- ${producto.nombre} ${producto.cantDeseada - producto.cantActual}`
-      )
-      .join("\n");
-
-      // alert(productosFaltantes);
-      navigator.clipboard.writeText(productosFaltantes)
-      .then(() => {
-        // alertSmall("copiado");
-      })
-      .catch((err)=> {
-        // alertSmall("error")
-      })
-  
-    if (!productosFaltantes) {
-      alert("No hay productos faltantes para este distribuidor.");
-      return;
-    }
-  }
-
   return (
     <div className="section section-productos">
         
@@ -189,7 +163,11 @@ const Productos = ({ user }) => {
         >
           Editar
         </button>
-        <button
+        <BotonCopiarLista
+  productosPorDistribuidor={productosPorDistribuidor}
+  nombresDistribuidores={nombresDistribuidores}
+/>
+        {/* <button
           className="btn"
           onClick={() =>
             logProductosFaltantes(
@@ -199,7 +177,7 @@ const Productos = ({ user }) => {
           }
         >
           Copiar Lista
-        </button> 
+        </button>  */}
       </div>
 
 
@@ -217,7 +195,7 @@ const Productos = ({ user }) => {
               <th colSpan={modoEdicion ? 4 : 3} className="text-center list-distr-name">
                 <div className="products-header">
                   <h3>{nombresDistribuidores[distribuidorId].nombre}</h3>
-                  <div className="btn-group">
+                  <div className="btn-group btns-distr">
                   <button
                     className="btn btn-sm ms-2 btn-wpp"
                     onClick={() =>
@@ -231,11 +209,14 @@ const Productos = ({ user }) => {
                   >
                     <i className="fa fa-whatsapp" aria-hidden="true"></i>
                   </button>
-                  <button className="btn copy-distri" onClick={()=> copiarPedidoPorDistribuidor(
+                  <BotonCopiar distribuidorId={distribuidorId}
+         productosPorDistribuidor={productosPorDistribuidor}
+        nombresDistribuidores={nombresDistribuidores}/>
+                  {/* <button className="btn copy-distri" onClick={()=> copiarPedidoPorDistribuidor(
                         distribuidorId,
                         productosPorDistribuidor,
                         nombresDistribuidores
-                      )}>copiar</button>
+                      )}>copiar</button> */}
                   </div>
                 </div>
               </th>

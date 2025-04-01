@@ -15,6 +15,35 @@
     .products-header{
         position: relative;
         @include grad-bg($gray-900, $gray-1000, 45deg);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        // padding-left: 3rem;
+        h3{
+            margin: 0;
+            flex: 1;
+            text-align: center;
+        }
+
+        .btns-distr{
+            width: 40%;
+
+           
+            button:nth-child(1){
+                width: 40%;
+                @include neu-bottom($gray-900, 1, .5, false);
+            }
+            
+            button:nth-child(2){
+                @include neu-bottom($gray-900, 1, .5, false);
+                padding: .5rem;
+                width: 60%;
+            }
+            button:active{
+                border: solid 1px transparent;
+                @include neu-bottom($gray-900, 1, 0, false);
+            }
+        }
         
         button{
             // position: absolute;

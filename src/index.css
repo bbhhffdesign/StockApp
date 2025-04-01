@@ -198,14 +198,6 @@ h3,
   color: #da7070;
 }
 
-.mensaje-alerta {
-  background-color: red;
-  position: fixed !important;
-  top: 0;
-  left: 0;
-  width: 5rem;
-}
-
 .page-container {
   width: 100vw;
   height: 100vh;
@@ -361,6 +353,7 @@ h3,
   color: #8a8a8a;
 }
 .dist-buttons button {
+  width: 50%;
   color: #8a8a8a;
   font-size: 1.2rem;
 }
@@ -390,6 +383,33 @@ h3,
 .table-products .products-header {
   position: relative;
   background: linear-gradient(45deg, #1f1f1f, #111111);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.table-products .products-header h3, .table-products .products-header .h3 {
+  margin: 0;
+  flex: 1;
+  text-align: center;
+}
+.table-products .products-header .btns-distr {
+  width: 40%;
+}
+.table-products .products-header .btns-distr button:nth-child(1) {
+  width: 40%;
+  box-shadow: inset -5px -5px 15px rgba(6, 6, 6, 0.5), inset 5px 5px 15px rgba(57, 57, 57, 0.5);
+  background: rgba(31, 31, 31, 0.5);
+}
+.table-products .products-header .btns-distr button:nth-child(2) {
+  box-shadow: inset -5px -5px 15px rgba(6, 6, 6, 0.5), inset 5px 5px 15px rgba(57, 57, 57, 0.5);
+  background: rgba(31, 31, 31, 0.5);
+  padding: 0.5rem;
+  width: 60%;
+}
+.table-products .products-header .btns-distr button:active {
+  border: solid 1px transparent;
+  box-shadow: inset -5px -5px 15px rgba(6, 6, 6, 0), inset 5px 5px 15px rgba(57, 57, 57, 0);
+  background: rgba(31, 31, 31, 0);
 }
 .table-products .products-header button .fa-whatsapp {
   font-size: 1.5rem;

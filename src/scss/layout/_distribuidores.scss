@@ -43,12 +43,12 @@
 }
 
 .dist-buttons {
-  // @include neu-bottom($gray-800, 1, 1, false);
   @include neu-top-soft($gray-900, 0.3, 0, false);
   border-radius: 0.5rem;
   color: $gray-200;
 
   button {
+    width: 50%;
     color: $gray-200;
     font-size: 1.2rem;
     &:active{
