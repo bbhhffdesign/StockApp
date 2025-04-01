@@ -23,7 +23,11 @@ const Productos = ({ user }) => {
     useState(null);
   const [mostrarModalProducto, setMostrarModalProducto] = useState(false);
   const [multiplicarPorDiez, setMultiplicarPorDiez] = useState(false);
-  const [mensajeAlerta, setMensajeAlerta] = useState("");
+  const [distribuidorExpandido, setDistribuidorExpandido] = useState(null);
+
+const toggleDistribuidor = (distribuidorId) => {
+  setDistribuidorExpandido((prev) => (prev === distribuidorId ? null : distribuidorId));
+};
 
   useEffect(() => {
     if (!user) return;
@@ -193,8 +197,13 @@ const Productos = ({ user }) => {
           <thead>
             <tr className="table-products-header-top">
               <th colSpan={modoEdicion ? 4 : 3} className="text-center list-distr-name">
-                <div className="products-header">
-                  <h3>{nombresDistribuidores[distribuidorId].nombre}</h3>
+              <div className="products-header">
+                  <h3
+                    className="toggle-header"
+                    onClick={() => toggleDistribuidor(distribuidorId)}
+                  >
+                    {nombresDistribuidores[distribuidorId].nombre}
+                  </h3>
                   <div className="btn-group btns-distr">
                   <button
                     className="btn btn-sm ms-2 btn-wpp"
@@ -212,23 +221,26 @@ const Productos = ({ user }) => {
                   <BotonCopiar distribuidorId={distribuidorId}
          productosPorDistribuidor={productosPorDistribuidor}
         nombresDistribuidores={nombresDistribuidores}/>
-                  {/* <button className="btn copy-distri" onClick={()=> copiarPedidoPorDistribuidor(
-                        distribuidorId,
-                        productosPorDistribuidor,
-                        nombresDistribuidores
-                      )}>copiar</button> */}
                   </div>
                 </div>
               </th>
             </tr>
-            <tr className={modoEdicion ? "table-products-header-large" : "table-products-header"}>
+            {distribuidorExpandido === distribuidorId && (
+              <tr className="table-products-header">
+                <th>Producto</th>
+                <th>Actual</th>
+                <th>Deseada</th>
+                {modoEdicion && <th>Acciones</th>}
+              </tr>
+            )}
+            {/* <tr className={modoEdicion ? "table-products-header-large" : "table-products-header"}>
               <th><small>Nombre</small></th>
               <th><small>Actual</small></th>
               <th><small>Deseada</small></th>
               {modoEdicion && <th><i className="fa fa-times-circle-o" aria-hidden="true"></i></th>}
-            </tr>
+            </tr> */}
           </thead>
-          <tbody>
+          <tbody className={distribuidorExpandido === distribuidorId ? "header-table-expanded" : "header-table-collapsed"}>
             {productosPorDistribuidor[distribuidorId].map((producto) => {
               const faltante = producto.cantActual < producto.cantDeseada;
               return (
@@ -237,7 +249,15 @@ const Productos = ({ user }) => {
                     className={faltante ? "producto producto-faltante" : "producto producto-suficiente"}
                    
                   >
-                    <td>{producto.nombre}</td>
+                    <td onClick={() => {
+                      if (modoEdicion) {
+                        setProductoSeleccionado(producto);
+                        setDistribuidorSeleccionado(distribuidorId);
+                        setMostrarModalProducto(true);
+                      } else {
+                        return
+                      }
+                    }}>{producto.nombre}</td>
                     <td className={faltante ? "cant-actual-faltante" : "cant-actual"}  onClick={() => {
                       if (modoEdicion) {
                         setProductoSeleccionado(producto);

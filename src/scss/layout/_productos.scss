@@ -28,14 +28,17 @@
         .btns-distr{
             width: 40%;
 
-           
+            
+            
             button:nth-child(1){
                 width: 40%;
-                @include neu-bottom($gray-900, 1, .5, false);
+                @include neu-bottom($gray-900, .5, .5, false);
+                border-top-left-radius: 0px ;
+                border-bottom-left-radius: 0px ;
             }
             
             button:nth-child(2){
-                @include neu-bottom($gray-900, 1, .5, false);
+                @include neu-bottom($gray-900, .5, .5, false);
                 padding: .5rem;
                 width: 60%;
             }
@@ -195,3 +198,22 @@
         }
     }
 }
+
+
+.header-table-expanded {
+    display: table-row-group;
+    opacity: 1;
+    height: auto;
+    transition: opacity 0.3s ease-in-out, height 0.3s ease-in-out;
+  }
+  
+  .header-table-collapsed {
+    display: none;
+    opacity: 0;
+    height: 0;
+  }
+  
+  .toggle-header {
+    cursor: pointer;
+    user-select: none;
+  }
