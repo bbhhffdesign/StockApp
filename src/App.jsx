@@ -117,7 +117,7 @@ function App() {
                   seccion !== "distribuidores" && setSeccion("distribuidores")
                 }
               >
-                Distribuidores
+                Creación
               </button>
               <button
                 className={`btn ${seccion === "productos" ? "active" : ""}`}
@@ -125,7 +125,7 @@ function App() {
                   seccion !== "productos" && setSeccion("productos")
                 }
               >
-                Productos
+                Listas
               </button>
               <button
                 className="btn btn-danger btn-danger-nav"

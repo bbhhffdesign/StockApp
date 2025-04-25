@@ -171,17 +171,7 @@ const toggleDistribuidor = (distribuidorId) => {
   productosPorDistribuidor={productosPorDistribuidor}
   nombresDistribuidores={nombresDistribuidores}
 />
-        {/* <button
-          className="btn"
-          onClick={() =>
-            logProductosFaltantes(
-              productosPorDistribuidor,
-              nombresDistribuidores
-            )
-          }
-        >
-          Copiar Lista
-        </button>  */}
+
       </div>
 
 
@@ -233,12 +223,6 @@ const toggleDistribuidor = (distribuidorId) => {
                 {modoEdicion && <th>Acciones</th>}
               </tr>
             )}
-            {/* <tr className={modoEdicion ? "table-products-header-large" : "table-products-header"}>
-              <th><small>Nombre</small></th>
-              <th><small>Actual</small></th>
-              <th><small>Deseada</small></th>
-              {modoEdicion && <th><i className="fa fa-times-circle-o" aria-hidden="true"></i></th>}
-            </tr> */}
           </thead>
           <tbody className={distribuidorExpandido === distribuidorId ? "header-table-expanded" : "header-table-collapsed"}>
             {productosPorDistribuidor[distribuidorId].map((producto) => {
