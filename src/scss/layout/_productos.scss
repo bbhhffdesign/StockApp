@@ -49,25 +49,6 @@
         }
         
         button{
-            // position: absolute;
-            // top: 0;
-            // right: -1px;
-            // padding: 0;
-            // height: auto;
-            // width: 10%;
-            // border-top-left-radius: 0px ;
-            // border-bottom-left-radius: 0px ;
-            // border-bottom-right-radius: 0px ;
-            // width: 3rem;
-            // height: 100%;
-            // @include neu-bottom($gray-900, 1, 1, false);
-            // border: none;
-
-
-            // &:active{
-            //     @include neu-bottom($gray-900, 0, 0, false);
-            //     color: $gray-200;
-            // }
 
             .fa-whatsapp{
                 font-size: 1.5rem;
@@ -122,6 +103,7 @@
     .producto{
         font-size: 1.5rem;
         color: $gray-200;
+        border-bottom: solid 1px rgba(75, 75, 75, 0.209);
         
         td{
             text-align: center;
@@ -139,7 +121,11 @@
                 border: none;
             }
         }
+        &.selected{
+            background-color: rgba(83, 83, 83, 0.537);
+        }
     }
+
     .row-hr{
         position: absolute;
         width: 100%;
@@ -166,7 +152,21 @@
         button{
             border-radius: 0px;
         }
+        .btn-group {
+            button:nth-child(1){
+                background-color: rgba(222, 125, 125, 0.194);
+            }
+            
+            button:nth-child(3){
+                background-color: #5b5b94ac;
+                color: $gray-900;
 
+                &:active{
+                    color: $gray-500;
+                }
+            }
+
+        }
 
         button{
             border: none;
