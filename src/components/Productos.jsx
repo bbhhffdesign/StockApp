@@ -25,64 +25,69 @@ const Productos = ({ user }) => {
   const [multiplicarPorDiez, setMultiplicarPorDiez] = useState(false);
   const [distribuidorExpandido, setDistribuidorExpandido] = useState(null);
 
-const toggleDistribuidor = (distribuidorId) => {
-  setDistribuidorExpandido((prev) => (prev === distribuidorId ? null : distribuidorId));
+  const toggleDistribuidor = (distribuidorId) => {
+    setDistribuidorExpandido((prev) => {
+      const nuevo = prev === distribuidorId ? null : distribuidorId;
+  
+      if (nuevo && !productosPorDistribuidor[distribuidorId]) {
+        cargarProductosDistribuidor(distribuidorId);
+      }
+  
+      return nuevo;
+    });
+  };
+
+const cargarProductosDistribuidor = (distribuidorId) => {
+  console.log("Cargando productos para:", distribuidorId); // <-- LOG
+  const productosRef = collection(
+    db,
+    `stocks/${user.email}/distribuidores/${distribuidorId}/productos`
+  );
+
+  onSnapshot(productosRef, (productosSnapshot) => {
+    const productos = productosSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    const productosOrdenados = productos.sort(
+      (a, b) => (b.cantActual < b.cantDeseada) - (a.cantActual < a.cantDeseada)
+    );
+
+    setProductosPorDistribuidor((prevState) => ({
+      ...prevState,
+      [distribuidorId]: productosOrdenados,
+    }));
+  });
 };
 
-  useEffect(() => {
-    if (!user) return;
 
-    const distribuidorRef = collection(
-      db,
-      `stocks/${user.email}/distribuidores`
-    );
-    const unsubscribeDistribuidores = onSnapshot(
-      distribuidorRef,
-      (snapshot) => {
-        const datosDistribuidores = {};
-        snapshot.docs.forEach((doc) => {
-          const data = doc.data();
-          datosDistribuidores[doc.id] = {
-            nombre: data.nombre,
-            telefono: data.telefono,
-          };
-        });
-        setNombresDistribuidores(datosDistribuidores);
-      }
-    );
 
-    // Cargar productos por distribuidor
-    const unsubscribeProductos = onSnapshot(distribuidorRef, (snapshot) => {
-      snapshot.docs.forEach((distribuidorDoc) => {
-        const distribuidorId = distribuidorDoc.id;
-        const productosRef = collection(
-          db,
-          `stocks/${user.email}/distribuidores/${distribuidorId}/productos`
-        );
 
-        onSnapshot(productosRef, (productosSnapshot) => {
-          const productos = productosSnapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-          const productosOrdenados = productos.sort(
-            (a, b) =>
-              (b.cantActual < b.cantDeseada) - (a.cantActual < a.cantDeseada)
-          );
+useEffect(() => {
+  if (!user) return;
 
-          setProductosPorDistribuidor((prevState) => ({
-            ...prevState,
-            [distribuidorId]: productosOrdenados,
-          }));
-        });
+  const distribuidorRef = collection(
+    db,
+    `stocks/${user.email}/distribuidores`
+  );
+
+  const unsubscribeDistribuidores = onSnapshot(
+    distribuidorRef,
+    (snapshot) => {
+      const datosDistribuidores = {};
+      snapshot.docs.forEach((doc) => {
+        const data = doc.data();
+        datosDistribuidores[doc.id] = {
+          nombre: data.nombre,
+          telefono: data.telefono,
+        };
       });
-    });
+      setNombresDistribuidores(datosDistribuidores);
+    }
+  );
 
-    return () => {
-      unsubscribeDistribuidores();
-      unsubscribeProductos();
-    };
-  }, [user]);
+  return () => unsubscribeDistribuidores();
+}, [user]);
 
   const actualizarCantidadProducto = async (
     distribuidorId,
@@ -178,23 +183,21 @@ const toggleDistribuidor = (distribuidorId) => {
 
 
 
-      {Object.keys(productosPorDistribuidor).length > 0 ? (
-  Object.keys(productosPorDistribuidor)
-    .filter((distribuidorId) => nombresDistribuidores[distribuidorId]?.nombre) 
-    .map((distribuidorId) => (
-      <div key={distribuidorId} className="mb-4">
-        <table className="table-products">
-          <thead>
-            <tr className="table-products-header-top">
-              <th colSpan={modoEdicion ? 4 : 3} className="text-center list-distr-name">
+      {Object.keys(nombresDistribuidores).length > 0 ? (
+  Object.keys(nombresDistribuidores).map((distribuidorId) => (
+    <div key={distribuidorId} className="mb-4">
+      <table className="table-products">
+        <thead>
+          <tr className="table-products-header-top">
+            <th colSpan={modoEdicion ? 4 : 3} className="text-center list-distr-name">
               <div className="products-header">
-                  <h3
-                    className="toggle-header"
-                    onClick={() => toggleDistribuidor(distribuidorId)}
-                  >
-                    {nombresDistribuidores[distribuidorId].nombre}
-                  </h3>
-                  <div className="btn-group btns-distr">
+                <h3
+                  className="toggle-header"
+                  onClick={() => toggleDistribuidor(distribuidorId)}
+                >
+                  {nombresDistribuidores[distribuidorId].nombre}
+                </h3>
+                <div className="btn-group btns-distr">
                   <button
                     className="btn btn-sm ms-2 btn-wpp"
                     onClick={() =>
@@ -203,54 +206,77 @@ const toggleDistribuidor = (distribuidorId) => {
                         productosPorDistribuidor,
                         nombresDistribuidores
                       )
-
                     }
                   >
                     <i className="fa fa-whatsapp" aria-hidden="true"></i>
                   </button>
-                  <BotonCopiar distribuidorId={distribuidorId}
-         productosPorDistribuidor={productosPorDistribuidor}
-        nombresDistribuidores={nombresDistribuidores}/>
-                  </div>
+                  <BotonCopiar
+                    distribuidorId={distribuidorId}
+                    productosPorDistribuidor={productosPorDistribuidor}
+                    nombresDistribuidores={nombresDistribuidores}
+                  />
                 </div>
-              </th>
-            </tr>
-            {distribuidorExpandido === distribuidorId && (
+              </div>
+            </th>
+          </tr>
+          {distribuidorExpandido === distribuidorId &&
+            productosPorDistribuidor[distribuidorId] && (
               <tr className="table-products-header">
                 <th>Producto</th>
                 <th>Actual</th>
                 <th>Deseada</th>
                 {modoEdicion && <th>Acciones</th>}
               </tr>
-            )}
-          </thead>
-          <tbody className={distribuidorExpandido === distribuidorId ? "header-table-expanded" : "header-table-collapsed"}>
-            {productosPorDistribuidor[distribuidorId].map((producto) => {
+          )}
+        </thead>
+        <tbody
+          className={
+            distribuidorExpandido === distribuidorId
+              ? "header-table-expanded"
+              : "header-table-collapsed"
+          }
+        >
+          {distribuidorExpandido === distribuidorId &&
+            productosPorDistribuidor[distribuidorId]?.map((producto) => {
               const faltante = producto.cantActual < producto.cantDeseada;
               return (
                 <React.Fragment key={producto.id}>
                   <tr
-                    className={faltante ? "producto producto-faltante" : "producto producto-suficiente"}
-                   
+                    className={
+                      faltante
+                        ? "producto producto-faltante"
+                        : "producto producto-suficiente"
+                    }
                   >
-                    <td onClick={() => {
-                      if (modoEdicion) {
-                        setProductoSeleccionado(producto);
-                        setDistribuidorSeleccionado(distribuidorId);
-                        setMostrarModalProducto(true);
-                      } else {
-                        return
+                    <td
+                      onClick={() => {
+                        if (modoEdicion) {
+                          setProductoSeleccionado(producto);
+                          setDistribuidorSeleccionado(distribuidorId);
+                          setMostrarModalProducto(true);
+                        }
+                      }}
+                    >
+                      {producto.nombre}
+                    </td>
+                    <td
+                      className={
+                        faltante ? "cant-actual-faltante" : "cant-actual"
                       }
-                    }}>{producto.nombre}</td>
-                    <td className={faltante ? "cant-actual-faltante" : "cant-actual"}  onClick={() => {
-                      if (modoEdicion) {
-                        setProductoSeleccionado(producto);
-                        setDistribuidorSeleccionado(distribuidorId);
-                        setMostrarModalProducto(true);
-                      } else {
-                        setFilaExpandida(filaExpandida === producto.id ? null : producto.id);
-                      }
-                    }}>{producto.cantActual}</td>
+                      onClick={() => {
+                        if (modoEdicion) {
+                          setProductoSeleccionado(producto);
+                          setDistribuidorSeleccionado(distribuidorId);
+                          setMostrarModalProducto(true);
+                        } else {
+                          setFilaExpandida(
+                            filaExpandida === producto.id ? null : producto.id
+                          );
+                        }
+                      }}
+                    >
+                      {producto.cantActual}
+                    </td>
                     <td className="cant-deseada">{producto.cantDeseada}</td>
                     {modoEdicion && (
                       <td>
@@ -261,7 +287,10 @@ const toggleDistribuidor = (distribuidorId) => {
                             handleEliminarProducto(distribuidorId, producto.id);
                           }}
                         >
-                          <i className="fa fa-times-circle-o" aria-hidden="true"></i>
+                          <i
+                            className="fa fa-times-circle-o"
+                            aria-hidden="true"
+                          ></i>
                         </button>
                       </td>
                     )}
@@ -276,15 +305,22 @@ const toggleDistribuidor = (distribuidorId) => {
                               actualizarCantidadProducto(
                                 distribuidorId,
                                 producto.id,
-                                producto.cantActual - (multiplicarPorDiez ? 5 : 1)
+                                producto.cantActual -
+                                  (multiplicarPorDiez ? 5 : 1)
                               )
                             }
                           >
                             -{multiplicarPorDiez ? "5" : "1"}
                           </button>
                           <button
-                            className={multiplicarPorDiez ? "btn btn-multiplicar-on" : "btn btn-multiplicar"}
-                            onClick={() => setMultiplicarPorDiez(!multiplicarPorDiez)}
+                            className={
+                              multiplicarPorDiez
+                                ? "btn btn-multiplicar-on"
+                                : "btn btn-multiplicar"
+                            }
+                            onClick={() =>
+                              setMultiplicarPorDiez(!multiplicarPorDiez)
+                            }
                           >
                             {multiplicarPorDiez ? "x5" : "x1"}
                           </button>
@@ -294,7 +330,8 @@ const toggleDistribuidor = (distribuidorId) => {
                               actualizarCantidadProducto(
                                 distribuidorId,
                                 producto.id,
-                                producto.cantActual + (multiplicarPorDiez ? 5 : 1)
+                                producto.cantActual +
+                                  (multiplicarPorDiez ? 5 : 1)
                               )
                             }
                           >
@@ -307,13 +344,14 @@ const toggleDistribuidor = (distribuidorId) => {
                 </React.Fragment>
               );
             })}
-          </tbody>
-        </table>
-      </div>
-    ))
+        </tbody>
+      </table>
+    </div>
+  ))
 ) : (
-  <p>No hay productos disponibles.</p>
+  <p>No hay distribuidores disponibles.</p>
 )}
+
 
       <Modal
         isOpen={mostrarModalProducto}
